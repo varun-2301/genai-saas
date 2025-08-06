@@ -1,0 +1,25 @@
+{
+  "name": "genai-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "dotenv-expand": "^12.0.2",
+    "express": "^5.1.0",
+    "firebase-admin": "^13.4.0",
+    "mongoose": "^8.17.0",
+    "openai": "^5.12.0",
+    "stripe": "^18.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

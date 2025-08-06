@@ -1,0 +1,37 @@
+/client/node_modules/*
+/server/node_modules/*
+.DS_Store
+/client/.env
+/server/.env
+
+# Logs
+/clientlogs
+/client/*.log
+/client/npm-debug.log*
+/client/yarn-debug.log*
+/client/yarn-error.log*
+/client/pnpm-debug.log*
+/client/lerna-debug.log*
+
+*.local
+
+# Editor directories and files
+/client/.vscode/*
+/client/.idea
+/client/.DS_Store
+/client/*.suo
+/client/*.ntvs*
+/client/*.njsproj
+/client/*.sln
+/client/*.sw?
+
+/server/.vscode/*
+/server/.idea
+/server/.DS_Store
+/server/*.suo
+/server/*.ntvs*
+/server/*.njsproj
+/server/*.sln
+/server/*.sw?
+
+.vscode/*
