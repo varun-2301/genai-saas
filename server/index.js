@@ -9,7 +9,10 @@ import paymentRoutes from './routes/paymentRoutes.js'
 
 const app = express()
 
-app.use(cors())
+//app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173', // <-- must match frontend exactly
+}));
 app.use(express.json())
 
 // Routes

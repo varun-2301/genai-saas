@@ -35,3 +35,5 @@
 /server/*.sw?
 
 .vscode/*
+
+/server/utils/serviceAccountKey.json

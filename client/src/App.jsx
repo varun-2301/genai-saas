@@ -7,6 +7,7 @@ import {Login} from "./pages/Login";
 import {Profile} from "./pages/Profile";
 import {Pricing} from "./pages/Pricing";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import Generate from "./pages/Generate";
 
 export const App =() => {
     return (
@@ -21,6 +22,14 @@ export const App =() => {
                         element={
                             <ProtectedRoute>
                                 <Dashboard />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/generate"
+                        element={
+                            <ProtectedRoute>
+                                <Generate />
                             </ProtectedRoute>
                         }
                     />

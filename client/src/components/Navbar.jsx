@@ -37,6 +37,7 @@ export const Navbar = () => {
                     {user && (
                         <>
                             <Link to="/dashboard" className="text-white px-4">Dashboard</Link>
+                            <Link to="/generate" className="text-white px-4">Generate</Link>
                             <Link to="/profile" className="text-white px-4">Profile</Link>
                             <Link to="/pricing" className="text-white px-4">Pricing</Link>
                             <button onClick={logout} className="text-white font-semibold">

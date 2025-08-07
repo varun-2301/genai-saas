@@ -18,8 +18,8 @@ router.post('/generate', verifyToken, checkUsageLimit, async (req, res) => {
 
     // Save Prompt + Increment Usage
     await Prompt.create({ uid: req.user.uid, prompt, response: output })
-    req.dbUser.generationsUsed++
-    await req.dbUser.save()
+    req.userData.promptsUsed++
+    await req.userData.save()
 
     res.json({ result: output })
 })

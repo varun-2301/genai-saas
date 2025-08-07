@@ -1,9 +1,4 @@
-import admin from 'firebase-admin'
-import { getAuth } from 'firebase-admin/auth'
-
-// if (!admin.apps.length) {
-//     admin.initializeApp()
-// }
+import admin from '../utils/firebase-admin.js'
 
 export const verifyToken = async (req, res, next) => {
     const authHeader = req.headers.authorization
@@ -11,7 +6,7 @@ export const verifyToken = async (req, res, next) => {
 
     const token = authHeader.split(' ')[1]
     try {
-        const decodedToken = await getAuth().verifyIdToken(token)
+        const decodedToken = await admin.auth().verifyIdToken(token)
         req.user = decodedToken
 
         // req.user = {
