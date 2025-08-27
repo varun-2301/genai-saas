@@ -1,10 +1,15 @@
-// utils/firebase-admin.js
-import admin from 'firebase-admin';
-import { readFileSync } from 'fs';
+import admin from "firebase-admin";
 
-const serviceAccount = JSON.parse(
-    readFileSync(new URL('./serviceAccountKey.json', import.meta.url))
-);
+let serviceAccount;
+
+if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+
+    // Fix private_key newlines (Render may keep them escaped as literal \n)
+    serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+} else {
+    throw new Error("❌ Firebase service account key not found in environment variables");
+}
 
 if (!admin.apps.length) {
     console.log("⛔ No existing Firebase app, initializing...");
@@ -16,6 +21,5 @@ if (!admin.apps.length) {
 } else {
     console.log("⚠️ Firebase admin already initialized");
 }
-
 
 export default admin;
