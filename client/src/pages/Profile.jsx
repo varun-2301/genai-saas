@@ -1,20 +1,31 @@
 // src/pages/Profile.jsx
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext"
+import { FaUser } from "react-icons/fa"
 
 export const Profile = () => {
     const { user } = useAuth()
 
     return (
-        <div className="p-8">
-            <h1 className="text-2xl font-bold">Profile</h1>
+        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 max-w-md mx-auto">
+            <h1 className="text-2xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+                <FaUser /> Profile
+            </h1>
             {user && (
-                <div className="mt-4 space-y-2">
-                <p><strong>Name:</strong> {user.displayName}</p>
-                <p><strong>Email:</strong> {user.email}</p>
-                <img src={user.photoURL} alt="avatar" className="w-20 rounded-full" />
+                <div className="mt-6 space-y-3 text-gray-700 dark:text-gray-300">
+                    <p>
+                        <strong>Name:</strong> {user.displayName}
+                    </p>
+                    <p>
+                        <strong>Email:</strong> {user.email}
+                    </p>
+                    <img
+                        src={user.photoURL}
+                        alt="avatar"
+                        className="w-24 h-24 rounded-full shadow border"
+                        referrerPolicy="no-referrer"
+                    />
                 </div>
             )}
         </div>
     )
 }
-

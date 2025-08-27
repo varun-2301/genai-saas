@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
-import api from '../services/api.js';
+// src/pages/Dashboard.jsx
+import { useEffect, useState } from "react"
+import api from "../services/api.js"
+import { FaChartPie, FaHistory } from "react-icons/fa"
 
 export const Dashboard = () => {
-  const [usage, setUsage] = useState(null);
-  const [history, setHistory] = useState([]);
+    const [usage, setUsage] = useState(null)
+    const [history, setHistory] = useState([])
 
     useEffect(() => {
         fetchData()
@@ -11,38 +13,47 @@ export const Dashboard = () => {
 
     const fetchData = async () => {
         try {
-            const usageRes = await api.get('/auth/me');
-            setUsage(usageRes.data);
-
-            const promptRes = await api.get('/prompts/history');
-            setHistory(promptRes.data);
+            const usageRes = await api.get("/auth/usage")
+            setUsage(usageRes.data)
+            
+            const promptRes = await api.get("/prompts/history")
+            setHistory(promptRes.data)
         } catch (err) {
-            console.error('Failed to fetch dashboard data', err);
+            console.error("Failed to fetch dashboard data", err)
         }
     }
 
     return (
-        <div className="max-w-4xl mx-auto mt-10">
-            <h1 className="text-2xl font-bold mb-4">Your Dashboard</h1>
+        <div className="space-y-8">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                Your Dashboard
+            </h1>
 
             {usage && (
-                <div className="bg-white rounded-lg shadow p-4 mb-6">
-                    <h2 className="text-lg font-semibold mb-2">Usage</h2>
-                    <p>{usage?.prompts?.used}/{usage?.prompts?.limit} prompts used</p>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <h2 className="text-lg font-semibold flex items-center gap-2 mb-2 text-gray-800 dark:text-gray-100">
+                        <FaChartPie /> Usage
+                    </h2>
+                    <p className="text-gray-700 dark:text-gray-300">
+                        {usage.promptsUsed} / {usage.maxLimit} prompts used
+                    </p>
                 </div>
             )}
 
-            <div className="bg-white rounded-lg shadow p-4">
-                <h2 className="text-lg font-semibold mb-2">Prompt History</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <h2 className="text-lg font-semibold flex items-center gap-2 mb-4 text-gray-800 dark:text-gray-100">
+                    <FaHistory /> Prompt History
+                </h2>
                 {history.length === 0 ? (
                     <p className="text-gray-500">No prompts yet.</p>
                 ) : (
-                    <ul className="space-y-2">
+                    <ul className="space-y-4">
                         {history.map((item) => (
-                        <li key={item._id} className="border-b py-2">
-                            <strong>Prompt:</strong> {item.prompt} <br />
-                            <strong>Response:</strong> {item.response}
-                        </li>
+                            <li key={item._id} className="border-b pb-2 text-gray-700 dark:text-gray-300">
+                                <strong>Prompt:</strong> {item.prompt}
+                                <br />
+                                <strong>Response:</strong> {item.response}
+                            </li>
                         ))}
                     </ul>
                 )}
@@ -50,4 +61,3 @@ export const Dashboard = () => {
         </div>
     )
 }
-
