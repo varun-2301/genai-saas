@@ -1,12 +1,10 @@
 import express from 'express'
 import { verifyToken } from '../middlewares/auth.js'
 import { checkUsageLimit } from '../middlewares/usageLimit.js'
-import { generatePrompt, getPromptHistory } from '../controllers/prompt.js'
+import { resume } from '../controllers/resume.js'
 
 const router = express.Router()
 
-router.post('/generate', verifyToken, checkUsageLimit, generatePrompt)
-
-router.get('/history', verifyToken, getPromptHistory)
+router.post('/review', verifyToken, checkUsageLimit, resume)
 
 export default router

@@ -2,10 +2,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext"
 import Layout from "./components/Layout"
-import {Dashboard} from "./pages/Dashboard"
-import {Login} from "./pages/Login"
-import {Profile} from "./pages/Profile"
+import { Dashboard } from "./pages/Dashboard"
+import { Login } from "./pages/Login"
+import { Profile } from "./pages/Profile"
 import {Pricing} from "./pages/Pricing"
+import {ResumeReviewer} from "./pages/resumeReviewer"
+import {ResumeScorecard} from "./pages/resumeScorecard"
 import ProtectedRoute from "./routes/ProtectedRoute"
 import Generate from "./pages/Generate"
 
@@ -19,6 +21,8 @@ export const App =() => {
                         <Route path="/pricing" element={<Pricing />} />
                         <Route path="/dashboard" element={ <ProtectedRoute> <Dashboard /> </ProtectedRoute> } />
                         <Route path="/generate" element={ <ProtectedRoute> <Generate /> </ProtectedRoute> } />
+                        <Route path="/resume-review" element={ <ProtectedRoute> <ResumeReviewer /> </ProtectedRoute> } />
+                        <Route path="/resume-scorecard" element={ <ProtectedRoute> <ResumeScorecard />  </ProtectedRoute> } />
                         <Route path="/profile" element={ <ProtectedRoute> <Profile /> </ProtectedRoute> } />
                     </Routes>
                 </Layout>

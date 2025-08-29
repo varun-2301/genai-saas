@@ -6,6 +6,7 @@ import './utils/loadEnv.js'
 import authRoutes from './routes/authRoutes.js'
 import promptRoutes from './routes/promptRoutes.js'
 import paymentRoutes from './routes/paymentRoutes.js'
+import resumeRoutes from './routes/resumeRoutes.js'
 
 const app = express()
 
@@ -18,6 +19,7 @@ app.use(express.json())
 app.use('/api/auth', authRoutes)
 app.use('/api/prompts', promptRoutes)
 app.use('/api/payments', paymentRoutes)
+app.use('/api/resume', resumeRoutes)
 
 // MongoDB Connect
 mongoose.connect(process.env.MONGO_URI)
