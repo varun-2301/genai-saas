@@ -13,6 +13,10 @@ const app = express()
 app.use(cors({
     origin: process.env.FRONTEND_URL, // <-- must match frontend exactly
 }));
+
+// Mount webhook first (needs raw body)
+app.use("/api/payments", webhookRoute);
+
 app.use(express.json())
 
 // Routes
