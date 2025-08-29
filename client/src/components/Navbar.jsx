@@ -1,51 +1,65 @@
-// src/components/Navbar.jsx
+import { useState, useRef, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { useAuth } from "../context/AuthContext"
+import { User, LogOut } from "lucide-react"
 import { signOut } from "firebase/auth"
 import { auth } from "../utils/firebase.js"
-import { FaUser, FaRocket, FaSignOutAlt, FaChartPie, FaTags, FaFile } from "react-icons/fa"
 
-export const Navbar = () => {
-    const { user } = useAuth()
+export const Navbar = ({ hideUserDropdown }) => {
+    const [isOpen, setIsOpen] = useState(false)
     const navigate = useNavigate()
+    const dropdownRef = useRef(null)
 
     const logout = async () => {
         await signOut(auth)
         navigate("/")
     }
 
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false)
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside)
+        
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [])
+
     return (
-        <nav className="bg-gray-900 text-white px-6 h-16 flex items-center shadow-md mb-8">
-            <div className="container mx-auto flex justify-between items-center">
-                <Link to="/" className="text-xl font-bold">GenAI SaaS</Link>
-                    <div className="flex items-center gap-6">
-                        {user && (
-                            <>
-                                <Link to="/dashboard" className="flex items-center gap-1 hover:text-blue-400">
-                                    <FaChartPie /> Dashboard
-                                </Link>
-                                <Link to="/generate" className="flex items-center gap-1 hover:text-blue-400">
-                                    <FaRocket /> Generate
-                                </Link>
-                                <Link to="/resume-review" className="flex items-center gap-1 hover:text-blue-400">
-                                    <FaFile /> Resume Review
-                                </Link>
-                                <Link to="/profile" className="flex items-center gap-1 hover:text-blue-400">
-                                    <FaUser /> Profile
-                                </Link>
-                                <Link to="/pricing" className="flex items-center gap-1 hover:text-blue-400">
-                                    <FaTags /> Pricing
-                                </Link>
-                                <button
-                                    onClick={logout}
-                                    className="flex items-center gap-1 hover:text-red-400"
-                                >
-                                    <FaSignOutAlt /> Logout
-                                </button>
-                            </>
-                        )}
-                    </div>
-            </div>
-        </nav>
+        <header className={`flex items-center px-6 py-4 bg-white/80 dark:bg-gray-950/80 backdrop-blur shadow relative ${!hideUserDropdown ? "justify-end" : ""}`}>
+            {hideUserDropdown && (
+                <h1 className="text-xl font-bold text-gray-800 dark:text-white">GenAI SaaS</h1>
+            )}
+            {!hideUserDropdown && (
+                <div className="relative" ref={dropdownRef}>
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="p-2 rounded-full bg-gray-200 hover:bg-gray-300"
+                    >
+                        <User />
+                    </button>
+
+                    {isOpen && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 z-50">
+                            <Link
+                                to="/profile"
+                                className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-300"
+                            >
+                                <User size={16} /> Profile
+                            </Link>
+                            <button
+                                onClick={logout}
+                                className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-300"
+                            >
+                                <LogOut size={16} /> Logout
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
+        </header>
     )
 }
+

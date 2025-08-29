@@ -1,3 +1,4 @@
+import CheckoutButton from "@/components/CheckoutButton"
 import { FaRocket, FaStar, FaCheckCircle } from "react-icons/fa"
 
 export const Pricing = () => {
@@ -51,9 +52,9 @@ export const Pricing = () => {
                         </p>
                     </div>
                     <div className="mt-auto pt-6">
-                        <button className="w-full bg-white text-purple-700 hover:bg-purple-100 px-4 py-3 rounded-lg font-semibold shadow">
+                        <CheckoutButton className="w-full bg-white text-purple-700 hover:bg-purple-100 px-4 py-3 rounded-lg font-semibold shadow">
                             Upgrade to Pro
-                        </button>
+                        </CheckoutButton>
                     </div>
                 </div>
             </div>

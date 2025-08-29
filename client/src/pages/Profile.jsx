@@ -12,18 +12,16 @@ export const Profile = () => {
             </h1>
             {user && (
                 <div className="mt-6 space-y-3 text-gray-700 dark:text-gray-300">
-                    <p>
-                        <strong>Name:</strong> {user.displayName}
-                    </p>
-                    <p>
-                        <strong>Email:</strong> {user.email}
-                    </p>
-                    <img
-                        src={user.photoURL}
-                        alt="avatar"
-                        className="w-24 h-24 rounded-full shadow border"
-                        referrerPolicy="no-referrer"
-                    />
+                    <div className="flex justify-center">
+                        <img
+                            src={user.photoURL}
+                            alt="avatar"
+                            className="w-24 h-24 rounded-full shadow border"
+                            referrerPolicy="no-referrer"
+                        />
+                    </div>
+                    <p><strong>Name:</strong> {user.displayName}</p>
+                    <p><strong>Email:</strong> {user.email}</p>
                 </div>
             )}
         </div>
