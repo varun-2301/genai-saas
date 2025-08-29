@@ -19,7 +19,7 @@ export default function CheckoutButton({ children = "Upgrade to Pro", className 
     }
 
     return (
-        <button onClick={handleCheckout} className={className}>
+        <button onClick={handleCheckout} className={`${className} cursor-pointer`}>
             {children}
         </button>
     )

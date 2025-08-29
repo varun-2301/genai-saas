@@ -21,8 +21,8 @@ export const createCheckoutSession = async (req, res) => {
             },
             ],
             mode: 'payment',
-            success_url: 'http://localhost:5173/dashboard',
-            cancel_url: 'http://localhost:5173/',
+            success_url: process.env.FRONTEND_URL + '/dashboard',
+            cancel_url: process.env.FRONTEND_URL + '/pricing',
         })
 
         res.json({ id: session.id }) // ✅ Return only the ID
@@ -40,7 +40,7 @@ export const paymentWebhook = async (req, res) => {
         event = stripe.webhooks.constructEvent(
             req.body,               // raw body required
             sig,
-            process.env.STRIPE_WEBHOOK_SECRET // get from Stripe Dashboard
+            process.env.STRIPE_WEBHOOK_KEY
         )
     } catch (err) {
         console.error("⚠️ Webhook signature verification failed:", err.message)
@@ -54,7 +54,7 @@ export const paymentWebhook = async (req, res) => {
         try {
             // Find user by email (or uid if you passed metadata)
             const user = await User.findOne({ email: session.customer_email })
-
+console.log('user', user)
             if (user) {
                 user.isPro = true // example: mark as Pro plan
                 await user.save()

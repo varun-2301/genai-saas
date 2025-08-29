@@ -7,6 +7,7 @@ import authRoutes from './routes/authRoutes.js'
 import promptRoutes from './routes/promptRoutes.js'
 import paymentRoutes from './routes/paymentRoutes.js'
 import resumeRoutes from './routes/resumeRoutes.js'
+import webhookRoutes from './routes/webhookRoutes.js'
 
 const app = express()
 
@@ -15,7 +16,7 @@ app.use(cors({
 }));
 
 // Mount webhook first (needs raw body)
-app.use("/api/payments", webhookRoute);
+app.use("/api/payments/webhook", webhookRoutes);
 
 app.use(express.json())
 
