@@ -48,8 +48,8 @@ export const Sidebar = () => {
                         <Rocket size={18} /> Prompt Generate
                     </NavLink>
 
-                    <NavLink to="/resume-reviewer" className={linkClasses} onClick={handleLinkClick}>
-                        <FileText size={18} /> Resume Reviewer
+                    <NavLink to="/resume-review" className={linkClasses} onClick={handleLinkClick}>
+                        <FileText size={18} /> Resume Review
                     </NavLink>
 
                     <NavLink to="/pricing" className={linkClasses} onClick={handleLinkClick}>

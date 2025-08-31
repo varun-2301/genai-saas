@@ -7,7 +7,7 @@ import api from "../services/api"
 import { FaFile } from "react-icons/fa"
 import { ResumeScorecard } from "./ResumeScorecard"
 
-export const ResumeReviewer = () => {
+export const ResumeReview = () => {
     const [resumeText, setResumeText] = useState("")
     const [review, setReview] = useState("")
     const [loading, setLoading] = useState(false)
