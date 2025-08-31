@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import api from "../services/api"
 import { FaFile } from "react-icons/fa"
-import { ResumeScorecard } from "./ResumeScorecard"
+import { ResumeScore } from "./ResumeScore"
 
 export const ResumeReview = () => {
     const [resumeText, setResumeText] = useState("")
@@ -23,7 +23,7 @@ export const ResumeReview = () => {
         try {
             const { data } = await api.post("/resume/review", { resumeText })
 
-            if(data.status === 200){
+            if(data){
                 setReview(data.review)
                 setScores(data.scorecard)
             } else {
@@ -37,7 +37,7 @@ export const ResumeReview = () => {
     }
 
     return (
-        <div className="max-w-4xl mx-auto py-12 px-4">
+        <div className="max-w-4xl mx-auto py-4 px-4">
             {/* Page Header */}
             <div className="text-center mb-10">
                 <div className="flex items-center justify-center mb-3">
@@ -79,7 +79,7 @@ export const ResumeReview = () => {
                     {/* Scorecard */}
                     {scores && (
                         <div className="animate-fadeIn">
-                            <ResumeScorecard scores={scores} />
+                            <ResumeScore scores={scores} />
                         </div>
                     )}
 

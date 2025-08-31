@@ -3,7 +3,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, XCircle, TrendingUp } from "lucide-react";
 
-export const ResumeScorecard = ({ scores }) =>{
+export const ResumeScore = ({ scores }) =>{
     return (
         <div className="p-6 space-y-6">
             <h1 className="text-2xl font-bold">Resume Scorecard</h1>
