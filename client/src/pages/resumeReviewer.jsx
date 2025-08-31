@@ -5,39 +5,31 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import api from "../services/api"
 import { FaFile } from "react-icons/fa"
-import { ResumeScorecard } from "./resumeScorecard"
-
-// const mockScore = {
-//     atsScore: 78,
-//     grammarScore: 85,
-//     skillsMatch: ["React", "Node.js", "MongoDB"],
-//     missingSkills: ["GraphQL", "AWS"],
-//     suggestions: [
-//         "Use more action verbs to describe achievements.",
-//         "Add measurable results to project experience.",
-//         "Highlight leadership or collaboration skills."
-//     ]
-// }
+import { ResumeScorecard } from "./ResumeScorecard"
 
 export const ResumeReviewer = () => {
     const [resumeText, setResumeText] = useState("")
     const [review, setReview] = useState("")
     const [loading, setLoading] = useState(false)
-    const [scores, setScores] = useState(null) // 👈 to hold scorecard data
+    const [scores, setScores] = useState(null)
 
     const handleReview = async () => {
         if (!resumeText.trim()) return
+
         setLoading(true)
         setReview("")
         setScores(null)
 
         try {
             const { data } = await api.post("/resume/review", { resumeText })
-            console.log("API Response:", data)
-            setReview(data.review || "Something went wrong.")
-            setScores(data.scorecard) // 👈 set mock scorecard data
+
+            if(data.status === 200){
+                setReview(data.review)
+                setScores(data.scorecard)
+            } else {
+                setReview("Something went wrong.")
+            }
         } catch (err) {
-            console.error(err)
             setReview("Error fetching review.")
         } finally {
             setLoading(false)

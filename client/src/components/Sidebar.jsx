@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { NavLink } from "react-router-dom"
-import { Menu, X, Home, FileText, CreditCard, Rocket } from "lucide-react"
+import { Menu, X, Home, FileText, CreditCard, Rocket, FileUp } from "lucide-react"
 
 export const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -44,16 +44,20 @@ export const Sidebar = () => {
                         <Home size={18} /> Dashboard
                     </NavLink>
 
-                    <NavLink to="/generate" className={linkClasses} onClick={handleLinkClick}>
-                        <Rocket size={18} /> Generate
+                    <NavLink to="/prompt-generate" className={linkClasses} onClick={handleLinkClick}>
+                        <Rocket size={18} /> Prompt Generate
                     </NavLink>
 
-                    <NavLink to="/resume-review" className={linkClasses} onClick={handleLinkClick}>
-                        <FileText size={18} /> Resume Review
+                    <NavLink to="/resume-reviewer" className={linkClasses} onClick={handleLinkClick}>
+                        <FileText size={18} /> Resume Reviewer
                     </NavLink>
 
                     <NavLink to="/pricing" className={linkClasses} onClick={handleLinkClick}>
                         <CreditCard size={18} /> Pricing
+                    </NavLink>
+
+                    <NavLink to="/rag" className={linkClasses} onClick={handleLinkClick}>
+                        <FileUp size={18} /> RAG Q&A
                     </NavLink>
                 </nav>
             </aside>

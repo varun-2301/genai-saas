@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import api from "../services/api.js"
 import { FaRocket } from "react-icons/fa"
 
-const Generate = () => {
+export const PromptGenerator = () => {
     const [prompt, setPrompt] = useState("")
     const [result, setResult] = useState("")
     const [usage, setUsage] = useState({ promptsUsed: 0, remaining: 5 })
@@ -78,4 +78,3 @@ const Generate = () => {
     )
 }
 
-export default Generate
