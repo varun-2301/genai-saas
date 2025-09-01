@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react"
 import api from "../services/api.js"
 import { FaRocket } from "react-icons/fa"
+import { Skeleton } from "@/components/ui/skeleton"
+import toast from "react-hot-toast"
 
 export const PromptGenerator = () => {
     const [prompt, setPrompt] = useState("")
     const [result, setResult] = useState("")
     const [usage, setUsage] = useState({ promptsUsed: 0, remaining: 5 })
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState("")
+    const [usageLoading, setUsageLoading] = useState(true)
 
     useEffect(() => {
         const fetchUsage = async () => {
@@ -16,18 +18,21 @@ export const PromptGenerator = () => {
                 setUsage(res.data)
             } catch (err) {
                 console.error("Usage fetch failed:", err.response?.data || err.message)
+            } finally {
+                setUsageLoading(false)
             }
         }
         fetchUsage()
     }, [])
 
     const handleGenerate = async () => {
-        if (!prompt.trim()) return
+        if (!prompt.trim()){
+            toast.error('Please provide some prompt')
+        }
         
         setLoading(true)
-        setError("")
-        setResult("")
         
+        const t = toast.loading("Waiting for response...")
         try {
             const { data: res } = await api.post("/prompts/generate", { prompt })
             if(res.success){
@@ -40,8 +45,10 @@ export const PromptGenerator = () => {
                 setUsage(usageRes.data)
             
         } catch (err) {
-            setError(err.response?.data || "Something went wrong")
+            const msg = err?.response?.data?.data || err.message || "Error fetching Question Answer"
+            toast.error(msg)
         } finally {
+            toast.dismiss(t)
             setLoading(false)
         }
     }
@@ -68,17 +75,27 @@ export const PromptGenerator = () => {
                 {loading ? "Generating..." : "Generate"}
             </button>
 
-            {error && <p className="text-red-500 mt-3">{error}</p>}
-
             <div className="mt-6">
                 <h4 className="font-semibold text-gray-900 dark:text-white">Response:</h4>
-                <p className="whitespace-pre-line mt-2 bg-gray-100 dark:bg-gray-700 p-3 rounded text-gray-800 dark:text-gray-200">
-                    {result}
-                </p>
+                {loading ? (
+                    <div className="space-y-2 mt-2">
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-4 w-1/2" />
+                        <Skeleton className="h-4 w-2/3" />
+                    </div>
+                ) : (
+                    <p className="whitespace-pre-line mt-2 bg-gray-100 dark:bg-gray-700 p-3 rounded text-gray-800 dark:text-gray-200">
+                        {result}
+                    </p>
+                )}
             </div>
 
             <div className="mt-6 text-sm text-gray-600 dark:text-gray-400">
-                {usage.promptsUsed} / {usage.maxLimit || 5} free prompts used
+                {usageLoading ? (
+                    <Skeleton className="h-4 w-40" />
+                ) : (
+                    `${usage?.promptsUsed || 0} / ${usage?.maxLimit || 5} free prompts used`
+                )}
             </div>
         </div>
     )

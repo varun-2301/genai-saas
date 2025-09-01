@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react"
+import toast from "react-hot-toast"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -6,22 +7,19 @@ import api from "../services/api"
 
 export const RagUpload = () => {
     const [file, setFile] = useState(null)
-    const [error, setError] = useState("")
-    const [message, setMessage] = useState("")
     const [isUploading, setIsUploading] = useState(false)
     const [showQA, setShowQA] = useState(false)
     
     const [question, setQuestion] = useState("")
     const [answers, setAnswers] = useState([])
-    const [qaError, setQAError] = useState('')
     const [isAsking, setIsAsking] = useState(false)
 
-    const chatEndRef = useRef(null);
+    const chatEndRef = useRef(null)
 
     // Auto scroll to bottom
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [answers]);
+    }, [answers, isAsking])
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0])
@@ -29,15 +27,19 @@ export const RagUpload = () => {
 
     const handleUpload = async () => {
         if (!file) {
-            setError("Please select a file first.")
+            toast.error("Please select a PDF file first")
+            return
+        }
+
+        if (file.type !== "application/pdf") {
+            toast.error("Only PDF files are allowed")
             return
         }
 
         setIsUploading(true)
-        setMessage("")
-        setError("")
         setShowQA(false)
 
+        const t = toast.loading("Uploading & indexing PDF...")
         try {
             const formData = new FormData()
             formData.append("file", file)
@@ -48,28 +50,33 @@ export const RagUpload = () => {
                     "Content-Type": "multipart/form-data",
                 },
             })
-console.log(res)
+
             if (res.success) {
-                setMessage("✅ PDF uploaded successfully!")
+                toast.success(res?.data?.message)
                 setShowQA(true)
-                setFile('')
+                setFile(null)
             } else {
-                setError(`❌ Error: ${res?.error?.data || "Something went wrong"}`)
+                toast.error(res.error?.data || "Upload failed.");
             }
         } catch (err) {
             console.error(err)
-            setError("❌ Error uploading file")
+            const msg = err?.response?.data?.error || err.message || "Upload failed";
+            toast.error(msg)
         } finally {
+            toast.dismiss(t)
             setIsUploading(false)
         }
     }
 
     const handleAsk = async () => {
-        if (!question) return
+        if (!question){
+            toast.error("Please enter a question")
+            return
+        }
 
         setIsAsking(true)
-        setQAError('')
-
+        
+        const t = toast.loading("Waiting for response...")
         try{
             setAnswers((prev) => [...prev, { role: "user", content: question }])
     
@@ -79,12 +86,14 @@ console.log(res)
                 setAnswers((prev) => [...prev, { role: "assistant", content: res.data.answer }])
                 setQuestion("")
             } else {
-                setQAError(`❌ Error: ${res.error.data || "Something went wrong"}`)
+                toast.error(`${res.data.data || "No answer received from server"}`)
             }
         } catch (err) {
             console.error(err)
-            setQAError("❌ Error fetching Question Answer")
+            const msg = err?.response?.data?.data || err.message || "Error fetching Question Answer"
+            toast.error(msg)
         } finally {
+            toast.dismiss(t)
             setIsAsking(false)
         }
     }
@@ -108,10 +117,6 @@ console.log(res)
                         >
                             {isUploading ? "Uploading..." : "Upload"}
                         </Button>
-
-                        {message && <p className="text-sm text-center">{message}</p>}
-                        {error && <p className="text-sm text-center text-red-500">{error}</p>}
-                    
                     </CardContent>
                 </Card>
             </div>
@@ -141,8 +146,19 @@ console.log(res)
                                 </div>
                             ))}
 
-                            {qaError && <p className="text-sm text-red-500 text-center">{qaError}</p>}
-                            
+                            {/* Skeleton Loader for Assistant */}
+                            {isAsking && (
+                                <div className="flex justify-start">
+                                    <div className="inline-block px-3 py-2 rounded-lg max-w-xs bg-gray-200">
+                                        <div className="space-y-2 animate-pulse">
+                                            <div className="h-3 w-24 bg-gray-300 rounded"></div>
+                                            <div className="h-3 w-32 bg-gray-300 rounded"></div>
+                                            <div className="h-3 w-20 bg-gray-300 rounded"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             <div ref={chatEndRef} />
                         </div>
 

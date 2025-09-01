@@ -6,6 +6,8 @@ import { Loader2 } from "lucide-react"
 import api from "../services/api"
 import { FaFile } from "react-icons/fa"
 import { ResumeScore } from "./ResumeScore"
+import { Skeleton } from "@/components/ui/skeleton"
+import toast from "react-hot-toast"
 
 export const ResumeReview = () => {
     const [resumeText, setResumeText] = useState("")
@@ -14,12 +16,16 @@ export const ResumeReview = () => {
     const [scores, setScores] = useState(null)
 
     const handleReview = async () => {
-        if (!resumeText.trim()) return
+        if (!resumeText.trim()){
+            toast.error('Please provide some resume content to analyze')
+            return
+        }
 
         setLoading(true)
         setReview("")
         setScores(null)
 
+        const t = toast.loading("Analyzing text and waiting for response...")
         try {
             const { data: result } = await api.post("/resume/review", { resumeText })
 
@@ -27,11 +33,13 @@ export const ResumeReview = () => {
                 setReview(result.data.review)
                 setScores(result.data.scorecard)
             } else {
-                setReview("Something went wrong.")
+                toast.error(result?.data?.data || "Something went wrong")
             }
         } catch (err) {
-            setReview("Error fetching review.")
+            const msg = err?.response?.data?.data || err.message || "Error fetching review"
+            toast.error(msg)
         } finally {
+            toast.dismiss(t)
             setLoading(false)
         }
     }
@@ -61,9 +69,9 @@ export const ResumeReview = () => {
 
                     <div className="flex justify-center">
                         <Button
-                        onClick={handleReview}
-                        disabled={loading}
-                        className="w-full sm:w-auto px-6"
+                            onClick={handleReview}
+                            disabled={loading}
+                            className="w-full sm:w-auto px-6"
                         >
                         {loading ? (
                             <>
@@ -75,15 +83,24 @@ export const ResumeReview = () => {
                         )}
                         </Button>
                     </div>
+                    
+                    {/* Scorecard with Skeleton */}
+                    {loading && (
+                        <div className="space-y-4 mt-4">
+                            <Skeleton className="h-24 w-full rounded-xl" />
+                            <Skeleton className="h-6 w-2/3" />
+                            <Skeleton className="h-6 w-1/2" />
+                        </div>
+                    )}
 
                     {/* Scorecard */}
-                    {scores && (
+                    {scores && !loading && (
                         <div className="animate-fadeIn">
                             <ResumeScore scores={scores} />
                         </div>
                     )}
 
-                    {review && (
+                    {review && !loading && (
                         <div className="bg-muted p-5 rounded-xl border border-border/40 animate-fadeIn">
                             <h3 className="text-lg font-semibold mb-3">AI Feedback</h3>
                             <p className="whitespace-pre-wrap leading-relaxed">{review}</p>

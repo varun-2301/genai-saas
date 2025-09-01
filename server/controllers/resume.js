@@ -75,7 +75,12 @@ export const resume = async(req, res, next) => {
         const scorecard = await getResumeScorecard(resumeText, jobDescription)
         
         // Step 3: Save Prompt + Increment Usage
-        await Prompt.create({ uid: req.user.uid, resumePrompt, response: review, scrorecard: scorecard })
+        await Prompt.create({ 
+            uid: req.user.uid, 
+            prompt: resumePrompt(resumeText, jobDescription), 
+            response: review, 
+            scorecard: scorecard 
+        })
         req.userData.promptsUsed++
         await req.userData.save()
 
