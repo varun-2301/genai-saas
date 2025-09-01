@@ -1,18 +1,15 @@
 import { useState, useRef, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { User, LogOut } from "lucide-react"
-import { signOut } from "firebase/auth"
-import { auth } from "../utils/firebase.js"
+import { User, LogOut, Moon } from "lucide-react"
+import { useAuth } from "../context/AuthContext";
+
 
 export const Navbar = ({ hideUserDropdown }) => {
     const [isOpen, setIsOpen] = useState(false)
     const navigate = useNavigate()
     const dropdownRef = useRef(null)
 
-    const logout = async () => {
-        await signOut(auth)
-        navigate("/")
-    }
+    const { theme, toggleTheme, logout } = useAuth()
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -49,6 +46,12 @@ export const Navbar = ({ hideUserDropdown }) => {
                             >
                                 <User size={16} /> Profile
                             </Link>
+                            {/* <button
+                                onClick={toggleTheme}
+                                className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-300"
+                            >
+                                <Moon size={12} /> {theme === "light" ? "Dark" : "Light"} Mode
+                            </button> */}
                             <button
                                 onClick={logout}
                                 className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-300"

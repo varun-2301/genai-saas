@@ -2,19 +2,19 @@ import User from '../models/User.js'
 import admin from '../utils/firebase-admin.js'
 
 export const saveUser = async (req, res) => {
-    const { idToken } = req.body
+    const { idToken, user } = req.body
     if (!idToken) return res.status(400).json({ error: 'Missing ID token' })
 
     try {
         const decodedToken = await admin.auth().verifyIdToken(idToken)
         const { uid, email } = decodedToken
 
-        let user = await User.findOne({ uid })
-        if (!user) {
-            user = await User.create({ uid, email })
+        let userRes = await User.findOne({ uid })
+        if (!userRes) {
+            userRes = await User.create({ uid, email, name: user?.displayName || 'Guest', photoUrl: user?.photoURL || '' })
         }
 
-        res.status(200).json({ message: "User stored", user })
+        res.status(200).json({ message: "User stored", userRes })
     } catch (error) {
         console.error("Error verifying Firebase ID token:", error)
         res.status(401).json({ error: "Invalid ID token" })
