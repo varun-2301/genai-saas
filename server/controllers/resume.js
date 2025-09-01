@@ -1,5 +1,6 @@
 import Prompt from '../models/Prompt.js'
 import { generateChat } from '../services/openai.js'
+import { handleSuccessResponse, notFound } from '../utils/responseHelper.js'
 
 const resumePrompt = (resumeText, jobDescription) => {
     return `You are an expert career coach. Review the following resume and provide:
@@ -58,12 +59,13 @@ const getResumeScorecard = async(resumeText, jobDescription) => {
 }
 
 
-export const resume = async(req, res) => {
+export const resume = async(req, res, next) => {
     try {
         const { resumeText, jobDescription } = req.body
 
         if (!resumeText) {
-            return ({ error: "Resume text is required" })
+            //return ({ error: "Resume text is required" })
+            throw notFound('Invalid CredentialsResume text is required');
         }
 
         // Step 1: Call review logic
@@ -78,10 +80,13 @@ export const resume = async(req, res) => {
         await req.userData.save()
 
         // Step 4: Combine into one response
-        res.json({ review, scorecard })
+        //res.json({ review, scorecard })
+        return handleSuccessResponse(res, { review, scorecard})
         
-    } catch (error) {
-        console.error("Error in /review:", error)
-        res.status(500).json({ error: "Failed to generate full review" })
+    } catch (err) {
+        console.error("Error in /review:", err)
+        //res.status(500).json({ error: "Failed to generate full review" })
+        
+        next(err)
     }
 }

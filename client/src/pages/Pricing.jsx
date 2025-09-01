@@ -3,7 +3,7 @@ import { FaRocket, FaStar, FaCheckCircle } from "react-icons/fa"
 
 export const Pricing = () => {
     return (
-        <div className="min-h-[calc(100dvh-4rem)] flex items-center justify-center px-4">
+        <div className="min-h-[calc(64dvh-4rem)] flex items-center justify-center px-4">
             <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Free Plan */}
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 flex flex-col">

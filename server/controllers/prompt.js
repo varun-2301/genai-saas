@@ -1,7 +1,8 @@
 import Prompt from '../models/Prompt.js'
 import { generateChat } from '../services/openai.js'
+import { handleSuccessResponse } from '../utils/responseHelper.js'
 
-export const generatePrompt = async(req, res) => {
+export const generatePrompt = async(req, res, next) => {
     try {
         const { prompt } = req.body
         
@@ -12,18 +13,24 @@ export const generatePrompt = async(req, res) => {
         req.userData.promptsUsed++
         await req.userData.save()
     
-        res.json({ result: output })
-    } catch (error) {
-        console.error("Error in /generate:", error)
-        res.status(500).json({ error: "Failed to generate prompt" })
+        //res.json({ result: output })
+        return handleSuccessResponse(res, {result: output})
+    } catch (err) {
+        console.error("Error in /generate:", err)
+        //res.status(500).json({ error: "Failed to generate prompt" })
+        
+        next(err)
     }
 }
 
 export const getPromptHistory = async(req, res) => {
     try{
         const prompts = await Prompt.find({ uid: req.user.uid }).sort({ createdAt: -1 })
-        res.json(prompts)
+        //res.json(prompts)
+        return handleSuccessResponse(res, prompts)
     } catch(err){
-        res.status(500).json({ error: "Failed to fetch prompt history" })
+        //res.status(500).json({ error: "Failed to fetch prompt history" })
+        
+        next(err)
     }
 }

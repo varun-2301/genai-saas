@@ -21,11 +21,11 @@ export const ResumeReview = () => {
         setScores(null)
 
         try {
-            const { data } = await api.post("/resume/review", { resumeText })
+            const { data: result } = await api.post("/resume/review", { resumeText })
 
-            if(data){
-                setReview(data.review)
-                setScores(data.scorecard)
+            if(result.success){
+                setReview(result.data.review)
+                setScores(result.data.scorecard)
             } else {
                 setReview("Something went wrong.")
             }
@@ -44,7 +44,7 @@ export const ResumeReview = () => {
                     <FaFile className="h-8 w-8 text-primary mr-2" />
                     <h1 className="text-3xl font-bold">AI Resume Reviewer</h1>
                 </div>
-                <p className="text-white">
+                <p className="text-white:600">
                     Paste your resume text and get instant AI-powered feedback.
                 </p>
             </div>

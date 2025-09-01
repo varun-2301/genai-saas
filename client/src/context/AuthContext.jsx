@@ -20,7 +20,8 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
         try {
             const res = await api.get("/auth/me")
-            if (res.status === 200) setUser(res.data.user)
+            if (res.data.success)
+                setUser(res.data.data.user)
         } catch (err) {
             console.error(err)
         }

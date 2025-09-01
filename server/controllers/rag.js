@@ -3,17 +3,17 @@ import pdfParse from 'pdf-extraction'
 import { OpenAIEmbeddings, ChatOpenAI } from "@langchain/openai"
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase"
 import { createClient } from "@supabase/supabase-js"
+import { handleSuccessResponse } from "../utils/responseHelper.js"
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
 
-export const docUpload = async(req, res) => {
+export const docUpload = async(req, res, next) => {
     try {
         // read the uploaded file
         const dataBuffer = fs.readFileSync(req.file.path)
 
         const pdf = await pdfParse(dataBuffer)
         const text = pdf.text
-        //const text = ""
         
         // Split text into chunks
         const chunks = text.match(/[\s\S]{1,1000}/g)
@@ -30,7 +30,8 @@ export const docUpload = async(req, res) => {
         // ✅ Delete the uploaded file to keep uploads/ clean
         await fs.promises.unlink(req.file.path)
 
-        res.json({ message: "PDF uploaded and indexed successfully!" })
+        //res.json({ message: "PDF uploaded and indexed successfully!" })
+        return handleSuccessResponse(res, { message: "PDF uploaded and indexed successfully!" })
     } catch (err) {
         console.error(err)
         // still try to cleanup if file exists
@@ -38,44 +39,43 @@ export const docUpload = async(req, res) => {
             await fs.promises.unlink(req.file.path)
         }
 
-        res.status(500).json({ error: "Error processing PDF" })
+        //res.status(500).json({ error: "Error processing PDF" })
+        next(err)
     }
 }
 
 export const ask = async (req, res) => {
     try {
-        const { question } = req.body;
+        const { question } = req.body
 
         // 1. Generate embedding
-        const embeddings = new OpenAIEmbeddings({ apiKey: process.env.OPENAI_API_KEY });
+        const embeddings = new OpenAIEmbeddings({ apiKey: process.env.OPENAI_API_KEY })
 
         // 2. Connect to Supabase vector store
         const vectorStore = await SupabaseVectorStore.fromExistingIndex(embeddings, {
             client: supabase,
             tableName: "documents",
             queryName: "match_documents",
-        });
+        })
 
         // 3. Perform similarity search
-        const results = await vectorStore.similaritySearch(question, 3);
+        const results = await vectorStore.similaritySearch(question, 3)
 
         // 4. Build context
-        const context = results.map((r) => r.pageContent).join("\n\n");
+        const context = results.map((r) => r.pageContent).join("\n\n")
 
         // 5. Call ChatOpenAI properly
-        const model = new ChatOpenAI({ apiKey: process.env.OPENAI_API_KEY });
-        // const response = await model.call([
-        //     new SystemMessage("You are a helpful assistant. Use the provided context to answer."),
-        //     new HumanMessage(`Context: ${context}\n\nQuestion: ${question}`),
-        // ]);
+        const model = new ChatOpenAI({ apiKey: process.env.OPENAI_API_KEY })
         const response = await model.invoke([
             { role: "system", content: "You are a helpful assistant." },
             { role: "user", content: `Context: ${context}\n\nQuestion: ${question}` }
-        ]);
+        ])
 
-        res.json({ answer: response.content });
+        //res.json({ answer: response.content })
+        return handleSuccessResponse(res, {answer :  response.content})
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Error querying documents" });
+        console.error(err)
+        //res.status(500).json({ error: "Error querying documents" })
+        next(err)
     }
 }

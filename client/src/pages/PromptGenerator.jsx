@@ -12,8 +12,8 @@ export const PromptGenerator = () => {
     useEffect(() => {
         const fetchUsage = async () => {
             try {
-                const { data } = await api.get("/auth/usage")
-                setUsage(data)
+                const { data: res } = await api.get("/auth/usage")
+                setUsage(res.data)
             } catch (err) {
                 console.error("Usage fetch failed:", err.response?.data || err.message)
             }
@@ -29,12 +29,18 @@ export const PromptGenerator = () => {
         setResult("")
         
         try {
-            const { data } = await api.post("/prompts/generate", { prompt })
-            setResult(data.result)
-            const usageRes = await api.get("/auth/usage")
-            setUsage(usageRes.data)
+            const { data: res } = await api.post("/prompts/generate", { prompt })
+            if(res.success){
+                setResult(res.data.result)
+                setPrompt('')
+            }
+
+            const { data: usageRes} = await api.get("/auth/usage")
+            if(usageRes.success)
+                setUsage(usageRes.data)
+            
         } catch (err) {
-            setError(err.response?.data?.error || "Something went wrong")
+            setError(err.response?.data || "Something went wrong")
         } finally {
             setLoading(false)
         }

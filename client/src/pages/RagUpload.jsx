@@ -43,18 +43,18 @@ export const RagUpload = () => {
             formData.append("file", file)
 
             // axios automatically sets headers for FormData
-            const res = await api.post(`/rag/upload`, formData, {
+            const { data: res} = await api.post(`/rag/upload`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
             })
-
-            if (res.status === 200) {
+console.log(res)
+            if (res.success) {
                 setMessage("✅ PDF uploaded successfully!")
                 setShowQA(true)
                 setFile('')
             } else {
-                setError(`❌ Error: ${res.error || "Something went wrong"}`)
+                setError(`❌ Error: ${res?.error?.data || "Something went wrong"}`)
             }
         } catch (err) {
             console.error(err)
@@ -73,13 +73,13 @@ export const RagUpload = () => {
         try{
             setAnswers((prev) => [...prev, { role: "user", content: question }])
     
-            const res = await api.post("/rag/ask", {question})
+            const { data:res } = await api.post("/rag/ask", {question})
 
-            if(res.status === 200){
+            if(res.success){
                 setAnswers((prev) => [...prev, { role: "assistant", content: res.data.answer }])
                 setQuestion("")
             } else {
-                setQAError(`❌ Error: ${res.error || "Something went wrong"}`)
+                setQAError(`❌ Error: ${res.error.data || "Something went wrong"}`)
             }
         } catch (err) {
             console.error(err)

@@ -13,10 +13,10 @@ export const Dashboard = () => {
 
     const fetchData = async () => {
         try {
-            const usageRes = await api.get("/auth/usage")
+            const {data : usageRes} = await api.get("/auth/usage")
             setUsage(usageRes.data)
             
-            const promptRes = await api.get("/prompts/history")
+            const { data : promptRes} = await api.get("/prompts/history")
             setHistory(promptRes.data)
         } catch (err) {
             console.error("Failed to fetch dashboard data", err)

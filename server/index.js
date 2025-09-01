@@ -10,6 +10,8 @@ import resumeRoutes from './routes/resumeRoutes.js'
 import webhookRoutes from './routes/webhookRoutes.js'
 import ragRoutes from './routes/ragRoutes.js'
 
+import { handleErrorResponse } from './utils/responseHelper.js'
+
 const app = express()
 
 app.use(cors({
@@ -27,6 +29,10 @@ app.use('/api/prompts', promptRoutes)
 app.use('/api/payments', paymentRoutes)
 app.use('/api/resume', resumeRoutes)
 app.use('/api/rag', ragRoutes)
+
+app.use((error, req, res) => {
+    handleErrorResponse(res, error);
+})
 
 // MongoDB Connect
 mongoose.connect(process.env.MONGO_URI)
