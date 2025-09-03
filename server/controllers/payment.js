@@ -32,11 +32,11 @@ export const createCheckoutSession = async (req, res, next) => {
 }
 
 export const paymentWebhook = async (req, res, next) => {
+    const sig = req.headers["stripe-signature"]
+    let stripeEvent
     try {
-        const sig = req.headers["stripe-signature"]
-        
-        let event
-        event = stripe.webhooks.constructEvent(
+
+        stripeEvent = stripe.webhooks.constructEvent(
             req.body,               // raw body required
             sig,
             process.env.STRIPE_WEBHOOK_KEY
@@ -47,8 +47,8 @@ export const paymentWebhook = async (req, res, next) => {
     }
 
     // ✅ Handle different events
-    if (event.type === "checkout.session.completed") {
-        const session = event.data.object
+    if (stripeEvent.type === "checkout.session.completed") {
+        const session = stripeEvent.data.object
 
         try {
             // Find user by email (or uid if you passed metadata)
