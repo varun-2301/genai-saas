@@ -27,16 +27,17 @@ export const ResumeReview = () => {
 
         const t = toast.loading("Analyzing text and waiting for response...")
         try {
-            const { data: result } = await api.post("/resume/review", { resumeText })
+            const result = await api.post("/resume/review", { resumeText })
 
             if(result.success){
                 setReview(result.data.review)
                 setScores(result.data.scorecard)
+                setResumeText('')
             } else {
                 toast.error(result?.data?.data || "Something went wrong")
             }
         } catch (err) {
-            const msg = err?.response?.data?.data || err.message || "Error fetching review"
+            const msg = err?.response?.data || err.message || "Error fetching review"
             toast.error(msg)
         } finally {
             toast.dismiss(t)

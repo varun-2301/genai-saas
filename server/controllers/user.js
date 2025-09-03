@@ -41,7 +41,7 @@ export const getUser = async (req, res, next) => {
     }
 }
 
-export const getUsage = async (req, res) => {
+export const getUsage = async (req, res, next) => {
     try {
         const user = await User.findOne({ uid: req.user.uid })
         if (!user) 

@@ -45,7 +45,7 @@ export const RagUpload = () => {
             formData.append("file", file)
 
             // axios automatically sets headers for FormData
-            const { data: res} = await api.post(`/rag/upload`, formData, {
+            const res = await api.post(`/rag/upload`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -60,7 +60,7 @@ export const RagUpload = () => {
             }
         } catch (err) {
             console.error(err)
-            const msg = err?.response?.data?.error || err.message || "Upload failed";
+            const msg = err?.response?.data || err.message || "Upload failed";
             toast.error(msg)
         } finally {
             toast.dismiss(t)
@@ -80,17 +80,17 @@ export const RagUpload = () => {
         try{
             setAnswers((prev) => [...prev, { role: "user", content: question }])
     
-            const { data:res } = await api.post("/rag/ask", {question})
+            const res = await api.post("/rag/ask", {question})
 
             if(res.success){
                 setAnswers((prev) => [...prev, { role: "assistant", content: res.data.answer }])
                 setQuestion("")
             } else {
-                toast.error(`${res.data.data || "No answer received from server"}`)
+                toast.error(`${res.data || "No answer received from server"}`)
             }
         } catch (err) {
             console.error(err)
-            const msg = err?.response?.data?.data || err.message || "Error fetching Question Answer"
+            const msg = err?.response?.data || err.message || "Error fetching Question Answer"
             toast.error(msg)
         } finally {
             toast.dismiss(t)

@@ -6,6 +6,7 @@ import { auth } from "../utils/firebase.js" // Adjust the import path as necessa
 import { signOut } from "firebase/auth"
 import { auth as authUser } from "../utils/firebase.js"
 import api from "../services/api.js"
+import toast from "react-hot-toast"
 
 const AuthContext = createContext()
 
@@ -20,10 +21,11 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
         try {
             const res = await api.get("/auth/me")
-            if (res.data.success)
-                setUser(res.data.data.user)
+            console.log(res)
+            if (res?.success)
+                setUser(res.data.user)
         } catch (err) {
-            console.error(err)
+            console.error('auth',err)
         }
     }
 

@@ -14,7 +14,7 @@ export const PromptGenerator = () => {
     useEffect(() => {
         const fetchUsage = async () => {
             try {
-                const { data: res } = await api.get("/auth/usage")
+                const res = await api.get("/auth/usage")
                 setUsage(res.data)
             } catch (err) {
                 console.error("Usage fetch failed:", err.response?.data || err.message)
@@ -26,26 +26,24 @@ export const PromptGenerator = () => {
     }, [])
 
     const handleGenerate = async () => {
-        if (!prompt.trim()){
+        if (!prompt.trim())
             toast.error('Please provide some prompt')
-        }
         
         setLoading(true)
-        
         const t = toast.loading("Waiting for response...")
         try {
-            const { data: res } = await api.post("/prompts/generate", { prompt })
+            const res = await api.post("/prompts/generate", { prompt })
             if(res.success){
                 setResult(res.data.result)
                 setPrompt('')
             }
 
-            const { data: usageRes} = await api.get("/auth/usage")
+            const usageRes = await api.get("/auth/usage")
             if(usageRes.success)
                 setUsage(usageRes.data)
             
         } catch (err) {
-            const msg = err?.response?.data?.data || err.message || "Error fetching Question Answer"
+            const msg = err?.response?.data || err.message || "Error fetching Question Answer"
             toast.error(msg)
         } finally {
             toast.dismiss(t)

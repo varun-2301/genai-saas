@@ -9,7 +9,7 @@ export const PromptHistory = ({ loading, history }) => {
 
     return (
         <Card className="bg-white dark:bg-gray-800 shadow p-6 rounded-lg">
-            <h2 className="text-lg font-semibold flex items-center gap-2 mb-4 text-gray-800 dark:text-gray-100">
+            <h2 className="text-lg font-semibold flex items-center gap-2 text-gray-800 dark:text-gray-100">
                 <FaHistory /> Prompt History
             </h2>
 
@@ -25,7 +25,7 @@ export const PromptHistory = ({ loading, history }) => {
             ) : history.length === 0 ? (
                 <p className="text-gray-500">No prompts yet.</p>
             ) : (
-                <div className="space-y-6">
+                <div className="max-h-96 overflow-y-auto space-y-6">
                     {history.map((item) => (
                         <Card
                             key={item._id}
