@@ -30,7 +30,6 @@ export const docUpload = async(req, res, next) => {
         // ✅ Delete the uploaded file to keep uploads/ clean
         await fs.promises.unlink(req.file.path)
 
-        //res.json({ message: "PDF uploaded and indexed successfully!" })
         return handleSuccessResponse(res, { message: "PDF uploaded and indexed successfully!" })
     } catch (err) {
         console.error(err)
@@ -39,7 +38,6 @@ export const docUpload = async(req, res, next) => {
             await fs.promises.unlink(req.file.path)
         }
 
-        //res.status(500).json({ error: "Error processing PDF" })
         next(err)
     }
 }
@@ -71,11 +69,9 @@ export const ask = async (req, res) => {
             { role: "user", content: `Context: ${context}\n\nQuestion: ${question}` }
         ])
 
-        //res.json({ answer: response.content })
         return handleSuccessResponse(res, {answer :  response.content})
     } catch (err) {
         console.error(err)
-        //res.status(500).json({ error: "Error querying documents" })
         next(err)
     }
 }

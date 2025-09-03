@@ -24,7 +24,6 @@ export const createCheckoutSession = async (req, res, next) => {
             cancel_url: process.env.FRONTEND_URL + '/pricing',
         })
 
-        //res.json({ id: session.id }) // ✅ Return only the ID
         return handleSuccessResponse(res, { id: session.id })
     } catch (err) {
         console.error("Stripe checkout error:", err.message)
@@ -44,7 +43,6 @@ export const paymentWebhook = async (req, res, next) => {
         )
     } catch (err) {
         console.error("⚠️ Webhook signature verification failed:", err.message)
-        //return res.status(400).send(`Webhook Error: ${err.message}`)
         next(err)
     }
 
@@ -61,7 +59,6 @@ export const paymentWebhook = async (req, res, next) => {
                 await user.save()
             }
 
-            //console.log(`✅ Payment successful for ${session.customer_email}`)
             return handleSuccessResponse(res, {message : `✅ Payment successful for ${session.customer_email}`})
         } catch (err) {
             console.error("❌ Error updating user after payment:", err.message)
@@ -69,6 +66,5 @@ export const paymentWebhook = async (req, res, next) => {
         }
     }
 
-    //res.status(200).json({ received: true })
     return handleSuccessResponse(res, {received : true})
 }
