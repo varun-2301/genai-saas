@@ -1,6 +1,7 @@
 import { generateChat } from '../services/openai.js'
 import { savePrompt } from './prompt.js'
 import { handleSuccessResponse, notFound } from '../utils/responseHelper.js'
+import { incrementUserAIUsage } from './user.js'
 
 const resumePrompt = (resumeText, jobDescription) => {
     return `You are an expert career coach. Review the following resume and provide:
@@ -74,8 +75,9 @@ export const resume = async(req, res, next) => {
         const scorecard = await getResumeScorecard(resumeText, jobDescription)
         
         // Step 3: Save Prompt + Increment Usage
-        await savePrompt(req.user.uid, resumePrompt(resumeText, jobDescription), review, scorecard, 'resume')
-
+        await savePrompt(req.user.uid, resumeText, review, scorecard, 'resume')
+        await incrementUserAIUsage(req.user.uid, 'prompt')
+        
         // Step 4: Combine into one response
         return handleSuccessResponse(res, { review, scorecard })
         

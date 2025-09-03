@@ -47,24 +47,30 @@ export const getUsage = async (req, res, next) => {
         if (!user) 
             throw notFound('User not found')
 
-        const MAX_FREE_LIMIT = 5 // central limit here
+        const usedData = user.usage.promptCount
+        const remainingData = Math.max(0, user.limits.promptLimit - user.usage.promptCount)
+        const maxData = user.limits.promptLimit
 
         return handleSuccessResponse(res, {
-            promptsUsed: user.promptsUsed,
-            remaining: Math.max(0, MAX_FREE_LIMIT - user.promptsUsed),
-            maxLimit: MAX_FREE_LIMIT,   // ✅ send maximum
+            dataUsed: usedData,
+            remaining: remainingData,
+            maxLimit: maxData
         })
     } catch (err) {
         next(err)
     }
 }
 
-export const incrementUserAIUsage = async(uid) => {
+export const incrementUserAIUsage = async(uid, type) => {
     try {
         // Increment Usage
         let user = await User.findOne({ uid })
         if(user){
-            user.promptsUsed++
+            if(type === 'prompt')
+                user.usage.promptCount++
+            else if(type === 'rag')
+                user.usage.ragCount++
+
             await user.save()
             return true
         }

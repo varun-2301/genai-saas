@@ -24,30 +24,35 @@ api.interceptors.response.use(
         let message = 'Something went wrong'
         if (error.response) {
             const status = error.response?.status
+            const errorMessage = error.response?.data.data
             switch (status) {
-                // authentication (token related issues)
+                // bad request
+                case 400:
+                    message = errorMessage || error.response?.statusText || 'Bad Request'
+                    break
+                
                 case 401:
-                    message = error.response?.statusText || 'Token Expired'
+                    message = errorMessage || error.response?.statusText || 'Token Expired'
                     break
 
                 // forbidden (permission related issues)
                 case 403:
-                    message = error.response?.statusText || 'Permission Denied'
+                    message = errorMessage || error.response?.statusText || 'Permission Denied'
                     break
 
                 // method not allowed
                 case 405:
-                    message = error.response?.statusText || 'Invalid Type Request'
+                    message = errorMessage || error.response?.statusText || 'Invalid Type Request'
                     break
 
                 // unprocessable
                 case 422:
-                    message = error.response?.statusText || 'Validation Error'
+                    message = errorMessage || error.response?.statusText || 'Validation Error'
                     break
 
                 // generic api error (server related) unexpected
                 case 500:
-                    message = error.response?.statusText || 'Server Error'
+                    message = errorMessage || error.response?.statusText || 'Server Error'
                     break
             }
         } else if (error.request && error.request.statusText) {

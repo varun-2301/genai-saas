@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Card } from "@/components/ui/card"
 
 export const PromptUsage = ({usage, loading}) => {
-    const { promptsUsed, maxLimit } = usage || {}
+    const { dataUsed, maxLimit } = usage || {}
 
     const getProgressColor = (percent) => {
         if (percent < 50) return "bg-green-500"
@@ -23,16 +23,16 @@ export const PromptUsage = ({usage, loading}) => {
                     <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700">
                         <div
                             className={`${getProgressColor(
-                                (promptsUsed / maxLimit) * 100
+                                (dataUsed / maxLimit) * 100
                             )} h-4 rounded-full transition-all`}
                             style={{
-                                width: `${(promptsUsed / maxLimit) * 100}%`,
+                                width: `${(dataUsed / maxLimit) * 100}%`,
                             }}
                         ></div>
                     </div>
                     <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300">
-                        <span>{promptsUsed} used</span>
-                        <span>{maxLimit - promptsUsed} remaining</span>
+                        <span>{dataUsed} used</span>
+                        <span>{maxLimit - dataUsed} remaining</span>
                     </div>
                 </div>
             )}

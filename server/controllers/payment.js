@@ -1,6 +1,7 @@
 import { stripe } from '../utils/stripe.js'
 import User from '../models/User.js'
 import { handleSuccessResponse } from '../utils/responseHelper.js'
+import { PLANS } from '../utils/constants.js'
 
 export const createCheckoutSession = async (req, res, next) => {
     try {
@@ -12,7 +13,7 @@ export const createCheckoutSession = async (req, res, next) => {
                 price_data: {
                     currency: 'usd',
                     product_data: {
-                        name: 'Pro Plan',
+                        name: PLANS.PAID_PLAN_NAME.name,
                     },
                     unit_amount: 1000,
                 },
@@ -55,7 +56,11 @@ export const paymentWebhook = async (req, res, next) => {
             const user = await User.findOne({ email: session.customer_email })
 
             if (user) {
-                user.isPro = true // example: mark as Pro plan
+                user.plan = PLANS.PAID_PLAN_NAME.name
+                user.limits = {
+                    promptLimit: PLANS.PAID_PLAN_NAME.promptLimit,
+                    ragLimit: PLANS.PAID_PLAN_NAME.ragLimit,
+                }
                 await user.save()
             }
 

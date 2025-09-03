@@ -5,7 +5,7 @@ import { generatePrompt, getPromptHistory } from '../controllers/prompt.js'
 
 const router = express.Router()
 
-router.post('/generate', verifyToken, checkUsageLimit, generatePrompt)
+router.post('/generate', verifyToken, checkUsageLimit('prompt'), generatePrompt)
 
 router.get('/history', verifyToken, getPromptHistory)
 

@@ -5,6 +5,6 @@ import { resume } from '../controllers/resume.js'
 
 const router = express.Router()
 
-router.post('/review', verifyToken, checkUsageLimit, resume)
+router.post('/review', verifyToken, checkUsageLimit('prompt'), resume)
 
 export default router

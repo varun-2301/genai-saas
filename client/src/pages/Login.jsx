@@ -16,6 +16,7 @@ export const Login = () => {
             const firebaseUser = result.user
             const idToken = await firebaseUser.getIdToken()
             await api.post("/auth/save-user", { idToken, user: firebaseUser })
+            navigate('/dashboard')
         } catch (err) {
             console.error("Login failed:", err)
         }

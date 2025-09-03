@@ -51,17 +51,14 @@ export const RagUpload = () => {
                 },
             })
 
-            if (res.success) {
+            if (res?.success) {
                 toast.success(res?.data?.message)
                 setShowQA(true)
                 setFile(null)
-            } else {
-                toast.error(res.error?.data || "Upload failed.");
-            }
+            } 
         } catch (err) {
-            console.error(err)
             const msg = err?.response?.data || err.message || "Upload failed";
-            toast.error(msg)
+            console.error(msg)
         } finally {
             toast.dismiss(t)
             setIsUploading(false)
@@ -82,16 +79,13 @@ export const RagUpload = () => {
     
             const res = await api.post("/rag/ask", {question})
 
-            if(res.success){
+            if(res?.success){
                 setAnswers((prev) => [...prev, { role: "assistant", content: res.data.answer }])
                 setQuestion("")
-            } else {
-                toast.error(`${res.data || "No answer received from server"}`)
             }
         } catch (err) {
-            console.error(err)
             const msg = err?.response?.data || err.message || "Error fetching Question Answer"
-            toast.error(msg)
+            console.error(msg)
         } finally {
             toast.dismiss(t)
             setIsAsking(false)

@@ -26,25 +26,27 @@ export const PromptGenerator = () => {
     }, [])
 
     const handleGenerate = async () => {
-        if (!prompt.trim())
+        if (!prompt.trim()){
             toast.error('Please provide some prompt')
+            return
+        }
         
         setLoading(true)
         const t = toast.loading("Waiting for response...")
         try {
             const res = await api.post("/prompts/generate", { prompt })
-            if(res.success){
+            if(res?.success){
                 setResult(res.data.result)
                 setPrompt('')
             }
 
             const usageRes = await api.get("/auth/usage")
-            if(usageRes.success)
+            if(usageRes?.success)
                 setUsage(usageRes.data)
             
         } catch (err) {
             const msg = err?.response?.data || err.message || "Error fetching Question Answer"
-            toast.error(msg)
+            console.error(msg)
         } finally {
             toast.dismiss(t)
             setLoading(false)
@@ -92,7 +94,7 @@ export const PromptGenerator = () => {
                 {usageLoading ? (
                     <Skeleton className="h-4 w-40" />
                 ) : (
-                    `${usage?.promptsUsed || 0} / ${usage?.maxLimit || 5} free prompts used`
+                    `${usage?.dataUsed} / ${usage?.maxLimit} prompts used`
                 )}
             </div>
         </div>

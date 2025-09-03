@@ -3,6 +3,8 @@ import multer from "multer"
 import path from "path"
 import fs from 'fs'
 import { ask, docUpload } from "../controllers/rag.js"
+import { checkUsageLimit } from "../middlewares/usageLimit.js"
+import { verifyToken } from "../middlewares/auth.js"
 
 const router = express.Router()
 // ✅ Ensure uploads dir exists at runtime
@@ -13,7 +15,7 @@ if (!fs.existsSync(uploadDir)) {
 
 const upload = multer({ dest: "uploads/" })
 
-router.post("/upload", upload.single("file"), docUpload)
-router.post("/ask", ask)
+router.post("/upload", upload.single("file"), verifyToken, checkUsageLimit('rag'), docUpload)
+router.post("/ask", verifyToken, ask)
 
 export default router

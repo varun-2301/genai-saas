@@ -7,7 +7,7 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
 export default function CheckoutButton({ children = "Upgrade to Pro", className = "" }) {
     const handleCheckout = async () => {
         try{
-            const res = await api.post("/payments/create-checkout-session", { plan: "free" })
+            const res = await api.post("/payments/create-checkout-session", { plan: "paid" })
             const { id } = res.data
     
             const stripe = await stripePromise

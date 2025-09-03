@@ -26,7 +26,7 @@ export const Dashboard = () => {
             setHistory(promptRes)
         } catch (err) {
             const msg = err?.response?.data || err.message || "Failed to fetch dashboard data"
-            toast.error(msg)
+            console.error(msg)
         } finally {
             setLoading(false)
         }
@@ -39,8 +39,8 @@ export const Dashboard = () => {
             </h1>
         
             {/* 🔴 Persistent Alert if usage exhausted */}
-            {usage && usage.promptsUsed >= usage.maxLimit && (
-                <UsageAlert handleClick={() => navigate('/pricing')} maxLimit={usage.maxLimit || 0} />
+            {usage && usage.dataUsed >= usage.maxLimit && (
+                <UsageAlert handleClick={() => navigate('/pricing')} maxLimit={usage.maxLimit} />
             )}
 
             {/* Usage Section */}

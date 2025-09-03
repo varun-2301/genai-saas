@@ -4,6 +4,7 @@ import { OpenAIEmbeddings, ChatOpenAI } from "@langchain/openai"
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase"
 import { createClient } from "@supabase/supabase-js"
 import { handleSuccessResponse } from "../utils/responseHelper.js"
+import { incrementUserAIUsage } from "./user.js"
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
 
@@ -27,8 +28,11 @@ export const docUpload = async(req, res, next) => {
                 { client: supabase, tableName: "documents" }
         )
 
-        // ✅ Delete the uploaded file to keep uploads/ clean
+        // Delete the uploaded file to keep uploads/ clean
         await fs.promises.unlink(req.file.path)
+
+        // increment usage
+        await incrementUserAIUsage(req.user.uid, 'rag')
 
         return handleSuccessResponse(res, { message: "PDF uploaded and indexed successfully!" })
     } catch (err) {

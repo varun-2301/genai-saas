@@ -29,16 +29,14 @@ export const ResumeReview = () => {
         try {
             const result = await api.post("/resume/review", { resumeText })
 
-            if(result.success){
+            if(result?.success){
                 setReview(result.data.review)
                 setScores(result.data.scorecard)
                 setResumeText('')
-            } else {
-                toast.error(result?.data?.data || "Something went wrong")
             }
         } catch (err) {
             const msg = err?.response?.data || err.message || "Error fetching review"
-            toast.error(msg)
+            console.error(msg)
         } finally {
             toast.dismiss(t)
             setLoading(false)

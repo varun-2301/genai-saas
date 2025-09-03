@@ -12,7 +12,7 @@ export const generatePrompt = async(req, res, next) => {
         
         // Save Prompt + Increment Usage
         await savePrompt(req.user.uid, prompt, output)
-        await incrementUserAIUsage(req.user.uid)
+        await incrementUserAIUsage(req.user.uid, 'prompt')
     
         return handleSuccessResponse(res, { result: output })
     } catch (err) {
