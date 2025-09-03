@@ -31,7 +31,6 @@ app.use('/api/resume', resumeRoutes)
 app.use('/api/rag', ragRoutes)
 
 app.use((error, req, res, next) => {
-    //console.log("index error", res)
     handleErrorResponse(res, error)
     next()
 })
