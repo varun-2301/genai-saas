@@ -4,12 +4,12 @@ import { FaRocket, FaStar, FaCheckCircle } from "react-icons/fa"
 import { FREE_PLAN_NAME, PAID_PLAN_NAME } from "../utils/constants"
 
 const FEATURES = {
-    FREE_PLAN_NAME : [
+    'FREE' : [
         '5 free prompts per day',
         '5 free resume text reviews per day',
         '2 RAG based reviews'
     ],
-    PAID_PLAN_NAME : [
+    'PRO' : [
         '10 free prompts per day',
         '10 free resume text reviews per day with scorecard',
         '5 RAG based reviews'
@@ -19,16 +19,18 @@ const FEATURES = {
 export const Pricing = () => {
     const { user } = useAuth()
 
-    // const renderFeatures = (type) => {
-    //     console.log(type)
-    //     const featuresList = FEATURES[type]
-    //     console.log(FEATURES[type])
-    //     return featuresList.map((feat, i) => (
-    //         <p className="flex items-center gap-2" key={i}>
-    //             <FaCheckCircle className="text-green-500" /> {feat}
-    //         </p>
-    //     ))
-    // }
+    const renderFeatures = (type) => {
+        const featuresList = FEATURES[type]
+        return (
+            <div className={`mt-6 space-y-3 ${type === FREE_PLAN_NAME ? 'text-gray-700 dark:text-gray-300' : ''}`}>
+                {featuresList.map((feat, i) => (
+                    <p className="flex items-center gap-2" key={i}>
+                        <FaCheckCircle className="text-green-500" /> {feat}
+                    </p>
+                ))}
+            </div>
+        )
+    }
 
     return (
         <div className="min-h-[calc(64dvh-4rem)] flex items-center justify-center px-4">
@@ -41,17 +43,8 @@ export const Pricing = () => {
                     <p className="mt-2 text-gray-600 dark:text-gray-400">
                         Get started for free and explore our SaaS features.
                     </p>
-                    <div className="mt-6 space-y-3 text-gray-700 dark:text-gray-300">
-                        <p className="flex items-center gap-2">
-                            <FaCheckCircle className="text-green-500" /> 5 free prompts per day
-                        </p>
-                        <p className="flex items-center gap-2">
-                            <FaCheckCircle className="text-green-500" /> 5 free resume text reviews per day
-                        </p>
-                        <p className="flex items-center gap-2">
-                            <FaCheckCircle className="text-green-500" /> 2 RAG based reviews
-                        </p>
-                    </div>
+                    
+                    {renderFeatures(FREE_PLAN_NAME)}
                     
                     <div className="mt-auto pt-6">
                         <button className="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 px-4 py-3 rounded-lg font-semibold">
@@ -68,17 +61,9 @@ export const Pricing = () => {
                     <p className="mt-2 text-purple-100">
                         Unlock unlimited access and premium features.
                     </p>
-                    <div className="mt-6 space-y-3">
-                        <p className="flex items-center gap-2">
-                            <FaCheckCircle className="text-green-300" /> 10 free prompts per day
-                        </p>
-                        <p className="flex items-center gap-2">
-                            <FaCheckCircle className="text-green-300" /> 10 free resume text reviews per day with scorecard
-                        </p>
-                        <p className="flex items-center gap-2">
-                            <FaCheckCircle className="text-green-300" /> 5 RAG based reviews
-                        </p>
-                    </div>
+                    
+                    {renderFeatures(PAID_PLAN_NAME)}
+                    
                     <div className="mt-auto pt-6">
                         <CheckoutButton className="w-full bg-white text-purple-700 hover:bg-purple-100 px-4 py-3 rounded-lg font-semibold shadow">
                             {user.plan === PAID_PLAN_NAME ? 'Current Plan' : 'Upgrade to Pro'}
