@@ -11,7 +11,7 @@ function startOfTodayIST() {
     return new Date(ist.getTime() - IST_OFFSET * 60000);
 }
 
-export const resetLimits = async(req, res) => {
+export const resetLimits = async(req, res, next) => {
     try {
         const todayIST = startOfTodayIST()
 
