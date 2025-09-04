@@ -19,7 +19,7 @@ export const Dashboard = () => {
 
     const fetchData = async () => {
         try {
-            const { data: usageRes } = await api.get("/auth/usage")
+            const { data: usageRes } = await api.get("/user/usage")
             setUsage(usageRes)
 
             const { data: promptRes } = await api.get("/prompts/history")

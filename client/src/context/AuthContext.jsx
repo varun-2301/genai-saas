@@ -1,12 +1,10 @@
-// src/context/AuthContext.jsx
 import { createContext, useContext, useEffect, useState } from "react"
 import { onAuthStateChanged } from "firebase/auth"
 import { useNavigate } from "react-router-dom"
-import { auth } from "../utils/firebase.js" // Adjust the import path as necessary
 import { signOut } from "firebase/auth"
+import { auth } from "../utils/firebase.js"
 import { auth as authUser } from "../utils/firebase.js"
 import api from "../services/api.js"
-import toast from "react-hot-toast"
 
 const AuthContext = createContext()
 
@@ -20,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     // Fetch user info
     const fetchUser = async () => {
         try {
-            const res = await api.get("/auth/me")
+            const res = await api.get("/user/me")
             if (res?.success)
                 setUser(res.data.user)
         } catch (err) {
@@ -54,7 +52,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ user, logout, theme, toggleTheme }}>
+        <AuthContext.Provider value={{ user, logout, theme, toggleTheme, refreshUser: fetchUser }}>
             {children}
         </AuthContext.Provider>
     )

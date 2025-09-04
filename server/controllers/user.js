@@ -1,4 +1,5 @@
 import User from '../models/User.js'
+import { PLANS } from '../utils/constants.js'
 import admin from '../utils/firebase-admin.js'
 import { handleSuccessResponse, notFound, unauthorizedRequest } from '../utils/responseHelper.js'
 
@@ -79,5 +80,27 @@ export const incrementUserAIUsage = async(uid, type) => {
     } catch (err) {
         console.error("Error in user usage increment:", err)
         return false
+    }
+}
+
+export const downgradeUserPlan = async(req, res, next) => {
+    try {
+        const user = await User.findOne({ uid: req.user.uid })
+        if (!user) 
+            throw notFound('User not found')
+
+        user.plan = PLANS.FREE_PLAN_NAME.name
+        user.limits = {
+            promptLimit: PLANS.FREE_PLAN_NAME.promptLimit,
+            ragLimit: PLANS.FREE_PLAN_NAME.ragLimit,
+        }
+
+        user.usage = { promptCount: 0, ragCount: 0 }
+        
+        await user.save()
+
+        return handleSuccessResponse(res, {message : "User Plan Downgraded Successfully"})
+    } catch (error) {
+        next(error)
     }
 }

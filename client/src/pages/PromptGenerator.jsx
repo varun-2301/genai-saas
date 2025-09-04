@@ -12,18 +12,19 @@ export const PromptGenerator = () => {
     const [usageLoading, setUsageLoading] = useState(true)
 
     useEffect(() => {
-        const fetchUsage = async () => {
-            try {
-                const res = await api.get("/auth/usage")
-                setUsage(res.data)
-            } catch (err) {
-                console.error("Usage fetch failed:", err.response?.data || err.message)
-            } finally {
-                setUsageLoading(false)
-            }
-        }
         fetchUsage()
     }, [])
+
+    const fetchUsage = async () => {
+        try {
+            const res = await api.get("/user/usage")
+            setUsage(res.data)
+        } catch (err) {
+            console.error("Usage fetch failed:", err.response?.data || err.message)
+        } finally {
+            setUsageLoading(false)
+        }
+    }
 
     const handleGenerate = async () => {
         if (!prompt.trim()){
@@ -40,9 +41,7 @@ export const PromptGenerator = () => {
                 setPrompt('')
             }
 
-            const usageRes = await api.get("/auth/usage")
-            if(usageRes?.success)
-                setUsage(usageRes.data)
+            fetchUsage()
             
         } catch (err) {
             const msg = err?.response?.data || err.message || "Error fetching Question Answer"

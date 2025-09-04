@@ -3,7 +3,7 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import './utils/loadEnv.js'
 
-import authRoutes from './routes/authRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 import promptRoutes from './routes/promptRoutes.js'
 import paymentRoutes from './routes/paymentRoutes.js'
 import resumeRoutes from './routes/resumeRoutes.js'
@@ -25,7 +25,7 @@ app.use("/api/payments/webhook", webhookRoutes);
 app.use(express.json())
 
 // Routes
-app.use('/api/auth', authRoutes)
+app.use('/api/user', userRoutes)
 app.use('/api/prompts', promptRoutes)
 app.use('/api/payments', paymentRoutes)
 app.use('/api/resume', resumeRoutes)

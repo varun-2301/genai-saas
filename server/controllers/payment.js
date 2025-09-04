@@ -61,6 +61,9 @@ export const paymentWebhook = async (req, res, next) => {
                     promptLimit: PLANS.PAID_PLAN_NAME.promptLimit,
                     ragLimit: PLANS.PAID_PLAN_NAME.ragLimit,
                 }
+
+                user.usage = { promptCount: 0, ragCount: 0 }
+
                 await user.save()
             }
 

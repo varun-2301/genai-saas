@@ -1,6 +1,11 @@
-import CheckoutButton from "@/components/CheckoutButton"
-import { useAuth } from "../context/AuthContext"
+import { useState } from "react"
 import { FaRocket, FaStar, FaCheckCircle } from "react-icons/fa"
+import { loadStripe } from "@stripe/stripe-js"
+import toast from "react-hot-toast"
+
+import { CheckoutButton} from "@/components/CheckoutButton"
+import api from "../services/api"
+import { useAuth } from "../context/AuthContext"
 import { FREE_PLAN_NAME, PAID_PLAN_NAME } from "../utils/constants"
 
 const FEATURES = {
@@ -16,8 +21,11 @@ const FEATURES = {
     ]
 }
 
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
+
 export const Pricing = () => {
-    const { user } = useAuth()
+    const { user, refreshUser } = useAuth()
+    const [loading, setLoading] = useState(false)
 
     const renderFeatures = (type) => {
         const featuresList = FEATURES[type]
@@ -30,6 +38,38 @@ export const Pricing = () => {
                 ))}
             </div>
         )
+    }
+
+    const handlePaidCheckout = async () => {
+        setLoading(true)
+        try{
+            const res = await api.post("/payments/create-checkout-session", { plan: "paid" })
+            
+            if(res?.success){
+                setLoading(false)
+                const { id } = res.data
+                const stripe = await stripePromise
+                await stripe.redirectToCheckout({ sessionId: id })
+            }
+        } catch (error) {
+            console.error("Error during checkout:", error)
+            setLoading(false)
+        }   
+    }
+
+    const handleFreeCheckout = async () => {
+        setLoading(true)
+        try{
+            const data = await api.get("/user/downgrade-plan")
+            if(data?.success){
+                toast.success(data.data.message)
+                await refreshUser()
+                setLoading(false)
+            }
+        } catch (error) {
+            setLoading(false)
+            console.error("Error during checkout:", error)
+        }   
     }
 
     return (
@@ -47,9 +87,12 @@ export const Pricing = () => {
                     {renderFeatures(FREE_PLAN_NAME)}
                     
                     <div className="mt-auto pt-6">
-                        <button className="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 px-4 py-3 rounded-lg font-semibold">
+                        {/* <button className="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 px-4 py-3 rounded-lg font-semibold">
+                            
+                        </button> */}
+                        <CheckoutButton className="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 px-4 py-3 rounded-lg font-semibold" handleClick={handleFreeCheckout} loading={user.plan === FREE_PLAN_NAME ? true : loading}>
                             {user.plan === FREE_PLAN_NAME ? 'Current Plan' : 'Downgrade to Free'}
-                        </button>
+                        </CheckoutButton>
                     </div>
                 </div>
 
@@ -65,7 +108,7 @@ export const Pricing = () => {
                     {renderFeatures(PAID_PLAN_NAME)}
                     
                     <div className="mt-auto pt-6">
-                        <CheckoutButton className="w-full bg-white text-purple-700 hover:bg-purple-100 px-4 py-3 rounded-lg font-semibold shadow">
+                        <CheckoutButton className="w-full bg-white text-purple-700 hover:bg-purple-100 px-4 py-3 rounded-lg font-semibold shadow" handleClick={handlePaidCheckout} loading={user.plan === PAID_PLAN_NAME ? true : loading}>
                             {user.plan === PAID_PLAN_NAME ? 'Current Plan' : 'Upgrade to Pro'}
                         </CheckoutButton>
                     </div>
