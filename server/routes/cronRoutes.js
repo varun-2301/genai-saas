@@ -1,6 +1,6 @@
 import express from "express"
-import { verifyCronSecret } from "../middlewares/cron"
-import { resetLimits } from "../controllers/cron"
+import { verifyCronSecret } from "../middlewares/cron.js"
+import { resetLimits } from "../controllers/cron.js"
 
 const router = express.Router()
 

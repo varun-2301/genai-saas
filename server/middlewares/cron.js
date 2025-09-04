@@ -1,4 +1,4 @@
-import { unauthorizedRequest } from "../utils/responseHelper";
+import { unauthorizedRequest } from "../utils/responseHelper.js"
 
 export const verifyCronSecret = (req, res, next) => {
     const secret = req.header("x-cron-secret");
