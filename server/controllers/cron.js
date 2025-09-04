@@ -19,8 +19,8 @@ export const resetLimits = async(req, res, next) => {
             {
                 "usage.lastReset": { $lt: todayIST },
                 $or: [
-                    { "usage.promptCount": { $gte: "$limits.promptLimit" } }, // can't use field ref in query
-                    { "usage.ragCount": { $gte: "$limits.ragLimit" } }
+                    { $expr: { $gte: ["$usage.promptCount", "$limits.promptLimit"] } },
+                    { $expr: { $gte: ["$usage.ragCount", "$limits.ragLimit"] } }
                 ]
             },
             {
