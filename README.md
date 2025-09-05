@@ -13,11 +13,11 @@ GenAI SaaS is a **MERN + Vite + Tailwind SaaS starter template** designed for bu
 # Table of Contents
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
+- [System Architecture](#system-architecture)
 - [Local Setup](#local-setup-full)
 - [Deployment (Render / Vercel)](#deployment-render--vercel)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
-- [License](#license)
 
 ---
 
@@ -58,6 +58,73 @@ GenAI SaaS is a **MERN + Vite + Tailwind SaaS starter template** designed for bu
 
 ---
 
+# System Architecture
+
+```mermaid
+flowchart TD
+    subgraph Client
+        UI[1️⃣ React + Vite + Tailwind + Shadcn]
+        FirebaseAuth[2️⃣ Firebase Google Auth]
+    end
+
+    subgraph Backend
+        ExpressAPI[3️⃣ Express.js API]
+
+        subgraph OpenAIFlow[AI Pipeline]
+            Source[4️⃣ PDF / Text Uploads]
+            Chunks[5️⃣ Chunking<br>LangChain Splitter]
+            Embeddings[6️⃣ Embeddings<br>OpenAI]
+            VectorDB[(7️⃣ Vector Store<br>Supabase or Pinecone)]
+            QueryEmbedding[8️⃣ Query Embedding<br>OpenAI]
+            Retriever[9️⃣ Semantic Search<br>LangChain Retriever]
+            LLM[🔟 LLM<br>OpenAI GPT-4 or GPT-3.5]
+        end
+
+        StripeAPI[Stripe Billing]
+        MongoDB[(MongoDB Database)]
+    end
+
+    %% Client Connections
+    UI --> FirebaseAuth
+    UI --> ExpressAPI
+
+    %% Backend Connections
+    ExpressAPI --> MongoDB
+    ExpressAPI --> StripeAPI
+
+    %% AI Pipeline
+    ExpressAPI --> Source
+    Source --> Chunks --> Embeddings --> VectorDB
+    UI --> ExpressAPI --> QueryEmbedding --> Retriever
+    Retriever --> VectorDB
+    Retriever --> LLM
+    LLM --> ExpressAPI --> UI
+```
+```bash
+1️⃣ UI (React + Vite + Tailwind + Shadcn) → The frontend where users log in, upload documents, and ask questions
+
+2️⃣ Firebase Google Auth → Handles authentication (login with Google)
+
+3️⃣ Express.js API → Central backend server connecting frontend, database, Stripe, and OpenAI pipeline.
+
+4️⃣ PDF / Text Uploads → Users upload documents. Files are sent to backend for processing.
+
+5️⃣ Chunking (LangChain Splitter) → Breaks large docs into smaller text chunks. Improves search accuracy.
+
+6️⃣ Embeddings (OpenAI) → Converts chunks into numeric vectors. Captures meaning, not just words.
+
+7️⃣ Vector Store (Supabase / Pinecone) → Stores embeddings(vectors). Enables semantic search.
+
+8️⃣ Query Embedding (OpenAI) → User query is also embedded. Ensures query & docs live in the same vector space.
+
+9️⃣ Semantic Search (LangChain Retriever) → Finds the most relevant chunks. Returns top matches as context.
+
+🔟 LLM (OpenAI GPT-4 / GPT-3.5) → Combines retrieved chunks + user query. Generates a natural-language answer.
+
+This is the RAG (Retrieval-Augmented Generation) step.
+```
+
+---
 # Local Setup (Full)
 
 Follow these steps to run the project locally with both backend and frontend.
