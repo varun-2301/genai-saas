@@ -1,4 +1,5 @@
 import { signInWithPopup } from "firebase/auth"
+import { useNavigate, Navigate } from "react-router-dom"
 import { FcGoogle } from "react-icons/fc"
 
 import { useAuth } from "../context/AuthContext"
@@ -7,6 +8,7 @@ import { auth, provider } from "../utils/firebase"
 import { Spinner } from "@/components/Spinner"
 
 export const Login = () => {
+    const navigate = useNavigate()
     const { user, loading, refreshUser } = useAuth()
 
     const handleLogin = async () => {
@@ -22,11 +24,11 @@ export const Login = () => {
     }
 
     if (loading) {
-        return <Spinner />
+        return <Spinner /> // or spinner
     }
 
     if (user) {
-        return <p className="text-center">Redirecting...</p>
+        return <Navigate to="/dashboard" replace />
     }
 
     return (

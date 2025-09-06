@@ -28,12 +28,6 @@ export const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        if (!loading && user) {
-            navigate("/dashboard")
-        }
-    }, [user, loading, navigate])
-
-    useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 fetchUser()
