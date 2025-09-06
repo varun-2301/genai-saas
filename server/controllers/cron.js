@@ -20,13 +20,15 @@ export const resetLimits = async(req, res, next) => {
                 "usage.lastReset": { $lt: todayIST },
                 $or: [
                     { $expr: { $gte: ["$usage.promptCount", "$limits.promptLimit"] } },
-                    { $expr: { $gte: ["$usage.ragCount", "$limits.ragLimit"] } }
+                    { $expr: { $gte: ["$usage.ragCount", "$limits.ragLimit"] } },
+                    { $expr: { $gte: ["$usage.imageCount", "$limits.imageLimit"] } }
                 ]
             },
             {
                 $set: {
                     "usage.promptCount": 0,
                     "usage.ragCount": 0,
+                    "usage.imageCount": 0,
                     "usage.lastReset": new Date(),
                 }
             }
