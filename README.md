@@ -33,13 +33,14 @@ GenAI SaaS is a **MERN + Vite + Tailwind SaaS starter template** designed for bu
   - Pricing page dynamically highlights current plan (`Free` or `Pro`)  
 
 - **Usage Tracking & Daily Reset**
-  - Free plan: **5 prompts/day**, **2 RAG queries/day**  
-  - Pro plan: **10 prompts/day**, **5 RAG queries/day**  
+  - Free plan: **5 prompts/day**, **2 RAG queries/day**, **2 Image Generation/day**
+  - Pro plan: **10 prompts/day**, **5 RAG queries/day**, **5 Image Generation/day**
   - Automatic daily reset of usage limits via **GitHub Actions cron job**  
 
 - **AI Modules**
   - **Resume Analyzer** → ATS score, matched & missing skills, improvement tips  
-  - **RAG Q&A** → PDF upload, embeddings stored in Supabase, contextual answers  
+  - **RAG Q&A** → PDF upload, embeddings stored in Supabase, contextual answers 
+  - **DALL·E Image Generation** → Generate images from text prompts using OpenAI’s DALL·E API 
 
 - **UI/UX**
   - React + Vite + Tailwind + ShadCN UI  
@@ -78,6 +79,7 @@ flowchart TD
             QueryEmbedding[8️⃣ Query Embedding<br>OpenAI]
             Retriever[9️⃣ Semantic Search<br>LangChain Retriever]
             LLM[🔟 LLM<br>OpenAI GPT-4 or GPT-3.5]
+            Dalle[1️⃣1️⃣ DALL·E<br>Image Generation]
         end
 
         StripeAPI[Stripe Billing]
@@ -99,6 +101,9 @@ flowchart TD
     Retriever --> VectorDB
     Retriever --> LLM
     LLM --> ExpressAPI --> UI
+
+    %% DALL·E Connection
+    UI --> ExpressAPI --> Dalle --> UI
 ```
 ```bash
 1️⃣ UI (React + Vite + Tailwind + Shadcn) → The frontend where users log in, upload documents, and ask questions
@@ -121,7 +126,7 @@ flowchart TD
 
 🔟 LLM (OpenAI GPT-4 / GPT-3.5) → Combines retrieved chunks + user query. Generates a natural-language answer.
 
-This is the RAG (Retrieval-Augmented Generation) step.
+1️⃣1️⃣ DALL·E (Image Generation) → Converts natural-language prompts into AI-generated images. Users can type “Generate a futuristic office logo” and instantly get an image result
 ```
 
 ---
