@@ -60,6 +60,7 @@ export const paymentWebhook = async (req, res, next) => {
                 user.limits = {
                     promptLimit: PLANS.PAID_PLAN_NAME.promptLimit,
                     ragLimit: PLANS.PAID_PLAN_NAME.ragLimit,
+                    imageLimit: PLANS.PAID_PLAN_NAME.imageLimit
                 }
 
                 user.usage = { promptCount: 0, ragCount: 0 }

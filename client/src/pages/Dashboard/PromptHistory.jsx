@@ -78,14 +78,14 @@ export const PromptHistory = ({ loading, history, user }) => {
 
                                 {/* Prompt bubble */}
                                 <div className="flex justify-end mb-2">
-                                    <div className="bg-purple-600 text-white px-3 py-2 rounded-lg max-w-xl text-sm">
+                                    <div className="bg-purple-600 text-white px-3 py-2 rounded-lg max-w-full md:max-w-xl text-sm break-words overflow-hidden">
                                         <strong>Prompt:</strong> {item.prompt}
                                     </div>
                                 </div>
 
                                 {/* Response bubble */}
                                 <div className="flex justify-start mb-2">
-                                    <div className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-2 rounded-lg max-w-xl text-sm">
+                                    <div className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-2 rounded-lg max-w-full md:max-w-xl text-sm break-words overflow-hidden">
                                         <strong>Response:</strong> {item.response}
                                     </div>
                                 </div>
