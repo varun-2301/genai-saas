@@ -10,10 +10,8 @@ const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
-
-    // Theme state
-    const [theme, setTheme] = useState(localStorage.getItem("theme") || "light")
 
     // Fetch user info
     const fetchUser = async () => {
@@ -23,26 +21,29 @@ export const AuthProvider = ({ children }) => {
                 setUser(res.data.user)
         } catch (err) {
             console.error('auth',err)
+            setUser(null)
+        } finally {
+            setLoading(false)
         }
     }
+
+    useEffect(() => {
+        if (!loading && user) {
+            navigate("/dashboard")
+        }
+    }, [user, loading, navigate])
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 fetchUser()
+            } else {
+                setUser(null)
+                setLoading(false)
             }
         })
-        return unsubscribe
+        return () => unsubscribe()
     }, [])
-
-    // Handle theme changes
-    useEffect(() => {
-        document.documentElement.classList.remove(theme === "light" ? "dark" : "light")
-        document.documentElement.classList.add(theme)
-        localStorage.setItem("theme", theme)
-    }, [theme])
-
-    const toggleTheme = () => setTheme((prev) => (prev === "light" ? "dark" : "light"))
 
     const logout = async() => {
         setUser(null)
@@ -52,7 +53,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ user, logout, theme, toggleTheme, refreshUser: fetchUser }}>
+        <AuthContext.Provider value={{ user, logout, refreshUser: fetchUser, loading }}>
             {children}
         </AuthContext.Provider>
     )

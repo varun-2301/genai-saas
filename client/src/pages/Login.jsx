@@ -1,14 +1,13 @@
-// src/pages/Login.jsx
 import { signInWithPopup } from "firebase/auth"
-import { auth, provider } from "../utils/firebase.js"
-import { useNavigate } from "react-router-dom"
-import { useAuth } from "../context/AuthContext.jsx"
-import api from "../services/api.js"
 import { FcGoogle } from "react-icons/fc"
 
+import { useAuth } from "../context/AuthContext"
+import api from "../services/api"
+import { auth, provider } from "../utils/firebase"
+import { Spinner } from "@/components/Spinner"
+
 export const Login = () => {
-    const navigate = useNavigate()
-    const { user } = useAuth()
+    const { user, loading, refreshUser } = useAuth()
 
     const handleLogin = async () => {
         try {
@@ -16,15 +15,18 @@ export const Login = () => {
             const firebaseUser = result.user
             const idToken = await firebaseUser.getIdToken()
             await api.post("/user/save-user", { idToken, user: firebaseUser })
-            navigate('/dashboard')
+            refreshUser()
         } catch (err) {
             console.error("Login failed:", err)
         }
     }
 
+    if (loading) {
+        return <Spinner />
+    }
+
     if (user) {
-        navigate("/dashboard")
-        return null
+        return <p className="text-center">Redirecting...</p>
     }
 
     return (
