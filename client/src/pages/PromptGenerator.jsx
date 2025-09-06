@@ -7,7 +7,7 @@ import toast from "react-hot-toast"
 export const PromptGenerator = () => {
     const [prompt, setPrompt] = useState("")
     const [result, setResult] = useState("")
-    const [usage, setUsage] = useState({ promptsUsed: 0, remaining: 5 })
+    const [usage, setUsage] = useState({ promptsUsed: 0, remaining: 0 })
     const [loading, setLoading] = useState(false)
     const [usageLoading, setUsageLoading] = useState(true)
 
@@ -17,7 +17,7 @@ export const PromptGenerator = () => {
 
     const fetchUsage = async () => {
         try {
-            const res = await api.get("/user/usage")
+            const res = await api.get("/user/usage", {params: {type : ['prompt']}})
             setUsage(res.data)
         } catch (err) {
             console.error("Usage fetch failed:", err.response?.data || err.message)
@@ -93,7 +93,7 @@ export const PromptGenerator = () => {
                 {usageLoading ? (
                     <Skeleton className="h-4 w-40" />
                 ) : (
-                    `${usage?.dataUsed} / ${usage?.maxLimit} prompts used`
+                    `${usage?.promptUsed} / ${usage?.promptMaxLimit} prompts used`
                 )}
             </div>
         </div>

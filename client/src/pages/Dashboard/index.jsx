@@ -1,27 +1,41 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom'
-import api from "../../services/api.js"
 
-import { PromptUsage } from "./PromptUsage.jsx"
-import { UsageAlert } from "./UsageAlert.jsx"
-import { PromptHistory } from "./PromptHistory.jsx"
+import api from "../../services/api"
+import { Usage } from "./Usage"
+import { UsageAlert } from "./UsageAlert"
+import { PromptHistory } from "./PromptHistory"
+import { useAuth } from "@/context/AuthContext"
 
 export const Dashboard = () => {
     const [usage, setUsage] = useState(null)
     const [history, setHistory] = useState([])
     const [loading, setLoading] = useState(true)
+    const { user } = useAuth()
 
     const navigate = useNavigate()
 
     useEffect(() => {
-        fetchData()
+        fetchUsageData()
+        fetchHistoryData()
     }, [])
 
-    const fetchData = async () => {
+    const fetchUsageData = async () => {
         try {
-            const { data: usageRes } = await api.get("/user/usage")
+            const tags = ['prompt', 'rag', 'image']
+            const { data: usageRes } = await api.get("/user/usage", {params : {type : tags}})
             setUsage(usageRes)
 
+        } catch (err) {
+            const msg = err?.response?.data || err.message || "Failed to fetch dashboard data"
+            console.error(msg)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const fetchHistoryData = async () => {
+        try {
             const { data: promptRes } = await api.get("/prompts/history")
             setHistory(promptRes)
         } catch (err) {
@@ -39,17 +53,24 @@ export const Dashboard = () => {
             </h1>
         
             {/* 🔴 Persistent Alert if usage exhausted */}
-            {usage && usage.dataUsed >= usage.maxLimit && (
-                <UsageAlert handleClick={() => navigate('/pricing')} maxLimit={usage.maxLimit} />
+            {usage && (
+                (usage.promptUsed >= usage.promptMaxLimit ||
+                 usage.ragUsed >= usage.ragMaxLimit ||
+                 usage.imageUsed >= usage.imageMaxLimit) && (
+                    <UsageAlert
+                        handleClick={() => navigate('/pricing')}
+                        message="You have exhausted one or more of your features limits"
+                    />
+                )
             )}
 
             {/* Usage Section */}
             {usage && (
-                <PromptUsage usage={usage} loading={loading} />
+                <Usage usage={usage} loading={loading} />
             )}
 
             {/* Prompt History Section */}
-            <PromptHistory loading={loading} history={history}  />
+            <PromptHistory loading={loading} history={history} user={user} />
         </div>
     )
 }

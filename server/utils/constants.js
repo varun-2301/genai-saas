@@ -7,11 +7,13 @@ export const PLANS = {
         priceId: null,
         promptLimit: 5,   // per day
         ragLimit: 2,      // per day
+        imageLimit: 2,    // per day
     },
     PAID_PLAN_NAME: {
         name: PAID_PLAN_NAME,
         priceId: 10,
         promptLimit: 10,
         ragLimit: 5,
+        imageLimit: 5,
     },
 }

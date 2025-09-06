@@ -10,10 +10,12 @@ const userSchema = new mongoose.Schema({
     limits: {
         promptLimit: { type: Number, default: PLANS.FREE_PLAN_NAME.promptLimit },
         ragLimit: { type: Number, default: PLANS.FREE_PLAN_NAME.ragLimit },
+        imageLimit: {type: Number, default: PLANS.FREE_PLAN_NAME.imageLimit},
     },
     usage: {
         promptCount: { type: Number, default: 0 },
         ragCount: { type: Number, default: 0 },
+        imageCount: { type: Number, default: 0 },
         lastReset: { type: Date, default: Date.now },
     },
 

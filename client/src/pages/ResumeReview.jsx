@@ -1,19 +1,23 @@
 import { useState } from "react"
+import toast from "react-hot-toast"
+import { Loader2 } from "lucide-react"
+import { FaFile } from "react-icons/fa"
+
+import { ResumeScore } from "./ResumeScore"
+import api from "../services/api"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
-import api from "../services/api"
-import { FaFile } from "react-icons/fa"
-import { ResumeScore } from "./ResumeScore"
 import { Skeleton } from "@/components/ui/skeleton"
-import toast from "react-hot-toast"
+import { isFreeUser } from "@/utils/helper"
+import { useAuth } from "@/context/AuthContext"
 
 export const ResumeReview = () => {
     const [resumeText, setResumeText] = useState("")
     const [review, setReview] = useState("")
     const [loading, setLoading] = useState(false)
     const [scores, setScores] = useState(null)
+    const { user } = useAuth()
 
     const handleReview = async () => {
         if (!resumeText.trim()){
@@ -93,7 +97,7 @@ export const ResumeReview = () => {
                     )}
 
                     {/* Scorecard */}
-                    {scores && !loading && (
+                    {scores && !loading && !isFreeUser(user) && (
                         <div className="animate-fadeIn">
                             <ResumeScore scores={scores} />
                         </div>

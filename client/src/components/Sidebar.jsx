@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { NavLink } from "react-router-dom"
-import { Menu, X, Home, FileText, CreditCard, Rocket, FileUp } from "lucide-react"
+import { Menu, X, Home, FileText, CreditCard, Rocket, FileUp, ImageIcon } from "lucide-react"
 
 export const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -58,6 +58,10 @@ export const Sidebar = () => {
 
                     <NavLink to="/rag" className={linkClasses} onClick={handleLinkClick}>
                         <FileUp size={18} /> RAG Q&A
+                    </NavLink>
+
+                    <NavLink to="/image" className={linkClasses} onClick={handleLinkClick}>
+                        <ImageIcon size={18} /> Image Generation 
                     </NavLink>
                 </nav>
             </aside>

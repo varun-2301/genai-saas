@@ -47,16 +47,34 @@ export const getUsage = async (req, res, next) => {
         const user = await User.findOne({ uid: req.user.uid })
         if (!user) 
             throw notFound('User not found')
+        
+        let type = req.query['type[]']
+        if (!type) {
+            type = []
+        } else if (!Array.isArray(type)) {
+            type = [type]
+        }
 
-        const usedData = user.usage.promptCount
-        const remainingData = Math.max(0, user.limits.promptLimit - user.usage.promptCount)
-        const maxData = user.limits.promptLimit
+        let responseData = {}
+        if(type.length > 0 && type.includes('prompt')){
+            responseData.promptUsed = user.usage.promptCount
+            responseData.promptRemaining = Math.max(0, user.limits.promptLimit - user.usage.promptCount)
+            responseData.promptMaxLimit = user.limits.promptLimit
+        }
 
-        return handleSuccessResponse(res, {
-            dataUsed: usedData,
-            remaining: remainingData,
-            maxLimit: maxData
-        })
+        if(type.length > 0 && type.includes('rag')){
+            responseData.ragUsed = user.usage.ragCount
+            responseData.ragRemaining = Math.max(0, user.limits.ragLimit - user.usage.ragCount)
+            responseData.ragMaxLimit = user.limits.ragLimit
+        }
+        
+        if(type.length > 0 && type.includes('image')){
+            responseData.imageUsed = user.usage.imageCount
+            responseData.imageRemaining = Math.max(0, user.limits.imageLimit - user.usage.imageCount)
+            responseData.imageMaxLimit = user.limits.imageLimit
+        }
+
+        return handleSuccessResponse(res, responseData)
     } catch (err) {
         next(err)
     }
@@ -71,6 +89,8 @@ export const incrementUserAIUsage = async(uid, type) => {
                 user.usage.promptCount++
             else if(type === 'rag')
                 user.usage.ragCount++
+            else if(type === 'image')
+                user.usage.imageCount++
 
             await user.save()
             return true

@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom"
 import { Navbar } from "./Navbar"
 import { Sidebar } from "./Sidebar"
 
-const Layout = ({ children }) => {
+export const Layout = ({ children }) => {
     const location = useLocation()
     const isLoginPage = location.pathname === "/"
 
@@ -25,4 +25,3 @@ const Layout = ({ children }) => {
     )
 }
 
-export default Layout

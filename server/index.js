@@ -9,6 +9,7 @@ import paymentRoutes from './routes/paymentRoutes.js'
 import resumeRoutes from './routes/resumeRoutes.js'
 import webhookRoutes from './routes/webhookRoutes.js'
 import ragRoutes from './routes/ragRoutes.js'
+import imageRoutes from './routes/imageRoutes.js'
 import cronRoutes from './routes/cronRoutes.js'
 
 import { handleErrorResponse } from './utils/responseHelper.js'
@@ -30,6 +31,7 @@ app.use('/api/prompts', promptRoutes)
 app.use('/api/payments', paymentRoutes)
 app.use('/api/resume', resumeRoutes)
 app.use('/api/rag', ragRoutes)
+app.use('/api/images', imageRoutes)
 app.use('/api/cron', cronRoutes)
 
 app.use((error, req, res, next) => {

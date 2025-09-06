@@ -1,10 +1,10 @@
 import { Suspense, lazy } from "react"
 import { Routes, Route } from "react-router-dom"
-import ProtectedRoute from "./ProtectedRoute"
+import { ProtectedRoute } from "./ProtectedRoute"
 import { Spinner } from "@/components/Spinner"
-import Layout from "@/components/Layout"
+import { Layout } from "@/components/Layout"
 
-// Lazy-loaded pages (no JSX here!)
+// Lazy-loaded pages
 const Login = lazy(() => import('../pages').then((module) => ({ default: module.Login })))
 const Dashboard = lazy(() => import('../pages').then((module) => ({ default: module.Dashboard })))
 const PromptGenerator = lazy(() => import('../pages').then((module) => ({ default: module.PromptGenerator })))
@@ -12,6 +12,7 @@ const ResumeReview = lazy(() => import('../pages').then((module) => ({ default: 
 const RagUpload = lazy(() => import('../pages').then((module) => ({ default: module.RagUpload })))
 const Profile = lazy(() => import('../pages').then((module) => ({ default: module.Profile })))
 const Pricing = lazy(() => import('../pages').then((module) => ({ default: module.Pricing })))
+const ImageGeneration = lazy(() => import('../pages').then((module) => ({ default: module.ImageGeneration})))
 
 export const MainRoute =() => {
     const routes = [
@@ -22,6 +23,7 @@ export const MainRoute =() => {
         { path: '/rag', component: RagUpload, isProtected: true },
         { path: '/profile', component: Profile, isProtected: true },
         { path: '/pricing', component: Pricing, isProtected: true },
+        { path: '/image', component: ImageGeneration, isProtected: true },
     ]
 
     return (

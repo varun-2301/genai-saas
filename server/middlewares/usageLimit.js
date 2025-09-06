@@ -14,6 +14,9 @@ export const checkUsageLimit = (type) => {
         if (type === "rag" && user.usage.ragCount >= user.limits.ragLimit)
             throw badRequest(errorMessage)
 
+        if (type === "image" && user.usage.imageCount >= user.limits.imageLimit)
+            throw badRequest(errorMessage)
+
         req.userData = user
         next()
     }
