@@ -29,6 +29,14 @@ export const Sidebar = () => {
                 {isOpen ? <X /> : <Menu />}
             </button>
 
+            {/* Overlay (click outside to close) */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 bg-opacity-50 z-30 md:hidden"
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
             <aside
                 className={`fixed md:static inset-y-0 left-0 w-64 bg-gray-900 text-gray-200 shadow-lg transform 
