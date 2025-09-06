@@ -1,30 +1,16 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import api from "../services/api.js"
 import { FaRocket } from "react-icons/fa"
 import { Skeleton } from "@/components/ui/skeleton"
 import toast from "react-hot-toast"
 
+import { UsageText } from "@/components/UsageText"
+
 export const PromptGenerator = () => {
     const [prompt, setPrompt] = useState("")
     const [result, setResult] = useState("")
-    const [usage, setUsage] = useState({ promptsUsed: 0, remaining: 0 })
     const [loading, setLoading] = useState(false)
-    const [usageLoading, setUsageLoading] = useState(true)
-
-    useEffect(() => {
-        fetchUsage()
-    }, [])
-
-    const fetchUsage = async () => {
-        try {
-            const res = await api.get("/user/usage", {params: {type : ['prompt']}})
-            setUsage(res.data)
-        } catch (err) {
-            console.error("Usage fetch failed:", err.response?.data || err.message)
-        } finally {
-            setUsageLoading(false)
-        }
-    }
+    const [refreshKey, setRefreshKey] = useState(0)
 
     const handleGenerate = async () => {
         if (!prompt.trim()){
@@ -39,10 +25,8 @@ export const PromptGenerator = () => {
             if(res?.success){
                 setResult(res.data.result)
                 setPrompt('')
+                setRefreshKey(prev => prev + 1)
             }
-
-            fetchUsage()
-            
         } catch (err) {
             const msg = err?.response?.data || err.message || "Error fetching Question Answer"
             console.error(msg)
@@ -75,27 +59,23 @@ export const PromptGenerator = () => {
             </button>
 
             <div className="mt-6">
-                <h4 className="font-semibold text-gray-900 dark:text-white">Response:</h4>
-                {loading ? (
-                    <div className="space-y-2 mt-2">
-                        <Skeleton className="h-4 w-3/4" />
-                        <Skeleton className="h-4 w-1/2" />
-                        <Skeleton className="h-4 w-2/3" />
-                    </div>
+                {loading && result === '' ? (
+                        <div className="space-y-2 mt-2">
+                            <Skeleton className="h-4 w-3/4" />
+                            <Skeleton className="h-4 w-1/2" />
+                            <Skeleton className="h-4 w-2/3" />
+                        </div>
                 ) : (
-                    <p className="whitespace-pre-line mt-2 bg-gray-100 dark:bg-gray-700 p-3 rounded text-gray-800 dark:text-gray-200">
-                        {result}
-                    </p>
+                    <>
+                        <h4 className="font-semibold text-gray-900 dark:text-white">Response:</h4>
+                        <p className="whitespace-pre-line mt-2 bg-gray-100 dark:bg-gray-700 p-3 rounded text-gray-800 dark:text-gray-200">
+                            {result}
+                        </p>
+                    </>
                 )}
             </div>
 
-            <div className="mt-6 text-sm text-gray-600 dark:text-gray-400">
-                {usageLoading ? (
-                    <Skeleton className="h-4 w-40" />
-                ) : (
-                    `${usage?.promptUsed} / ${usage?.promptMaxLimit} prompts used`
-                )}
-            </div>
+            <UsageText type="prompt" refetchKey={refreshKey} />
         </div>
     )
 }

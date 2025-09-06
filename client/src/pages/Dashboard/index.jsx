@@ -6,33 +6,19 @@ import { Usage } from "./Usage"
 import { UsageAlert } from "./UsageAlert"
 import { PromptHistory } from "./PromptHistory"
 import { useAuth } from "@/context/AuthContext"
+import { useUsage } from "@/hooks/useUsage"
 
 export const Dashboard = () => {
-    const [usage, setUsage] = useState(null)
     const [history, setHistory] = useState([])
     const [loading, setLoading] = useState(true)
     const { user } = useAuth()
+    const { usage, usageLoading } = useUsage(['prompt', 'image', 'rag'])
 
     const navigate = useNavigate()
 
     useEffect(() => {
-        fetchUsageData()
         fetchHistoryData()
     }, [])
-
-    const fetchUsageData = async () => {
-        try {
-            const tags = ['prompt', 'rag', 'image']
-            const { data: usageRes } = await api.get("/user/usage", {params : {type : tags}})
-            setUsage(usageRes)
-
-        } catch (err) {
-            const msg = err?.response?.data || err.message || "Failed to fetch dashboard data"
-            console.error(msg)
-        } finally {
-            setLoading(false)
-        }
-    }
 
     const fetchHistoryData = async () => {
         try {
@@ -66,7 +52,7 @@ export const Dashboard = () => {
 
             {/* Usage Section */}
             {usage && (
-                <Usage usage={usage} loading={loading} />
+                <Usage usage={usage} loading={usageLoading} />
             )}
 
             {/* Prompt History Section */}

@@ -1,30 +1,15 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import toast from "react-hot-toast"
 
 import api from "@/services/api"
 import { Skeleton } from "@/components/ui/skeleton"
+import { UsageText } from "@/components/UsageText"
 
 export const ImageGeneration = () => {
     const [prompt, setPrompt] = useState("")
     const [imageUrl, setImageUrl] = useState("")
     const [loading, setLoading] = useState(false)
-    const [usage, setUsage] = useState({ promptsUsed: 0, remaining: 0 })
-    const [usageLoading, setUsageLoading] = useState(true)
-
-    useEffect(() => {
-        fetchUsage()
-    }, [])
-
-    const fetchUsage = async () => {
-        try {
-            const res = await api.get("/user/usage", { params: {type: ['image']}})
-            setUsage(res.data)
-        } catch (err) {
-            console.error("Usage fetch failed:", err.response?.data || err.message)
-        } finally {
-            setUsageLoading(false)
-        }
-    }
+    const [refreshKey, setRefreshKey] = useState(0)
 
     const handleGenerate = async () => {
         if (!prompt.trim()){
@@ -37,10 +22,10 @@ export const ImageGeneration = () => {
         try{
             const res = await api.post("/images", { prompt })
 
-            if(res?.success)
+            if(res?.success){
                 setImageUrl(res.data.imageUrl)
-
-            fetchUsage()
+                setRefreshKey(prev => prev + 1)
+            }
         } catch(err){
             console.error("Image fetch failed:", err.response?.data || err.message)
         } finally {
@@ -81,13 +66,7 @@ export const ImageGeneration = () => {
                 }
             </div>
 
-            <div className="mt-6 text-sm text-gray-600 dark:text-gray-400">
-                {usageLoading ? (
-                    <Skeleton className="h-4 w-40" />
-                ) : (
-                    `${usage?.imageUsed} / ${usage?.imageMaxLimit} prompts used`
-                )}
-            </div>
+            <UsageText type="image" refetchKey={refreshKey} />
         </div>
     )
 }
