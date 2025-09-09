@@ -43,6 +43,7 @@ export const PromptGenerator = () => {
             </h2>
 
             <textarea
+                name="prompt"
                 rows={4}
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}

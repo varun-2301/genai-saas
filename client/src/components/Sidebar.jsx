@@ -43,7 +43,11 @@ export const Sidebar = () => {
                 ${isOpen ? "translate-x-0" : "-translate-x-full"} 
                 md:translate-x-0 transition-transform duration-200 ease-in-out z-40`}
             >
-                <div className="p-6 border-b border-gray-700">
+                {/* <div className="p-6 border-b border-gray-700">
+                    <h2 className="text-xl font-bold">GenAI SaaS</h2>
+                </div> */}
+                <div className="p-6 border-b border-gray-700 flex items-center gap-2">
+                    <img src="/logo.png" alt="GenAI Logo" className="h-8 w-8" />
                     <h2 className="text-xl font-bold">GenAI SaaS</h2>
                 </div>
 
