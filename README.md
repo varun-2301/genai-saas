@@ -14,7 +14,9 @@ GenAI SaaS is a **MERN + Vite + Tailwind SaaS starter template** designed for bu
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
 - [System Architecture](#system-architecture)
-- [Local Setup](#local-setup-full)
+- [Local Setup (Manual)](#local-setup-manual)
+- [Local Setup (Docker)](#local-setup-docker)
+- [Demo Live Url's](#demo-live-urls)
 - [Deployment (Render / Vercel)](#deployment-render--vercel)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
@@ -130,7 +132,7 @@ flowchart TD
 ```
 
 ---
-# Local Setup (Full)
+# Local Setup (Manual)
 
 Follow these steps to run the project locally with both backend and frontend.
 
@@ -220,23 +222,48 @@ npm run dev
 ```
 The frontend should now run at http://localhost:5173
 
+## 4. Test the Application
+  - Open the frontend in your browser → http://localhost:5173
+  - Signup/login using Google OAuth.
+  - Try generating prompts, uploading resumes, testing RAG Q&A and image generation.
+  - Upgrade to Pro plan using Stripe Checkout (test mode keys).
+  - Verify that usage limits reset daily (via GitHub Actions cron job).
+  - You now have the project running locally!
 
-## 4. Live URLs (Production)
+---
+# Local Setup (Docker)
+After executing the steps 1-3 from above, run the following commands to run the project via docker:
+
+1. Build & Start the Services
+From the root of the project, run:
+```bash
+docker-compose up --build
+```
+
+2. Stopping the Services
+To stop the containers, run:
+```bash
+docker-compose down
+```
+
+3. Running Individually
+If you only want to run one service (frontend or backend):
+```bash
+# Run only the server
+docker-compose up --build server
+
+# Run only the client
+docker-compose up --build client
+```
+
+
+---
+
+# Demo Live URLs
 
 - **Frontend (Vercel)** → [https://genai-saas-client.vercel.app](https://genai-saas-client.vercel.app)  
 - **Backend (Render)** → [https://genai-saas.onrender.com](https://genai-saas.onrender.com)  
 - **API Base URL (for client)** → `https://genai-saas.onrender.com/api`
-
-
-## 5. Test the Application
-  - Open the frontend in your browser → http://localhost:5173
-  - Signup/login using Google OAuth.
-  - Try generating prompts, uploading resumes, and testing RAG Q&A.
-  - Upgrade to Pro plan using Stripe Checkout (test mode keys).
-  - Verify that usage limits reset daily (via GitHub Actions cron job).
-  - ✅ You now have the project running locally!
-
-
 ---
 
 # Deployment (Render / Vercel)
