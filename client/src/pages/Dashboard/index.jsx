@@ -5,7 +5,7 @@ import api from "../../services/api"
 import { Usage } from "./Usage"
 import { UsageAlert } from "./UsageAlert"
 import { PromptHistory } from "./PromptHistory"
-import { useAuth } from "@/context/AuthContext"
+import { useAuth } from "@/context"
 import { useUsage } from "@/hooks/useUsage"
 
 export const Dashboard = () => {

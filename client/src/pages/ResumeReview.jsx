@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { isFreeUser } from "@/utils/helper"
-import { useAuth } from "@/context/AuthContext"
+import { useAuth } from "@/context"
 
 export const ResumeReview = () => {
     const [resumeText, setResumeText] = useState("")

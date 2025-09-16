@@ -1,5 +1,4 @@
-// src/pages/Profile.jsx
-import { useAuth } from "../context/AuthContext"
+import { useAuth } from "../context"
 import { FaUser } from "react-icons/fa"
 
 export const Profile = () => {
