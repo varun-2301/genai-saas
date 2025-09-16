@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20] # always use latest LTS for JS projects
+        node-version: [22] # always use latest LTS for JS projects
 
     steps:
       - name: Checkout code
@@ -53,24 +53,40 @@ jobs:
           cd client
           npm test || echo "No tests defined, skipping"
 
-  docker-build:
+  docker-build-server:
     runs-on: ubuntu-latest
     needs: lint-and-test
-    if: github.ref == 'refs/heads/main' # Only build Docker image on main branch merges
+    if: github.ref == 'refs/heads/main'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push Docker image
+      - name: Build & push server image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./server
+          file: ./server/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/genai-saas:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/genai-saas-server:latest
+
+  docker-build-client:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build & push client image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./client
+          file: ./client/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/genai-saas-client:latest
