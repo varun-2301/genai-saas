@@ -5,7 +5,7 @@ import toast from "react-hot-toast"
 
 import { CheckoutButton} from "@/components/CheckoutButton"
 import api from "../services/api"
-import { useAuth } from "../context/AuthContext"
+import { useAuth } from "../context"
 import { FREE_PLAN_NAME, PAID_PLAN_NAME } from "../utils/constants"
 import { isFreeUser } from "@/utils/helper"
 

@@ -1,6 +1,6 @@
 // src/routes/ProtectedRoute.jsx
 import { Navigate } from "react-router-dom"
-import { useAuth } from "../context/AuthContext"
+import { useAuth } from "../context"
 import { Spinner } from "@/components/Spinner"
 
 export const ProtectedRoute = ({ children }) => {

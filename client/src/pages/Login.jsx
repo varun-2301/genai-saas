@@ -1,14 +1,13 @@
 import { signInWithPopup } from "firebase/auth"
-import { useNavigate, Navigate } from "react-router-dom"
+import { Navigate } from "react-router-dom"
 import { FcGoogle } from "react-icons/fc"
 
-import { useAuth } from "../context/AuthContext"
+import { useAuth } from "../context"
 import api from "../services/api"
 import { auth, provider } from "../utils/firebase"
 import { Spinner } from "@/components/Spinner"
 
 export const Login = () => {
-    const navigate = useNavigate()
     const { user, loading, refreshUser } = useAuth()
 
     const handleLogin = async () => {

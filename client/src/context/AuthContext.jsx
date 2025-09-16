@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 import { onAuthStateChanged } from "firebase/auth"
 import { useNavigate } from "react-router-dom"
 import { signOut } from "firebase/auth"
@@ -6,7 +6,7 @@ import { auth } from "../utils/firebase.js"
 import { auth as authUser } from "../utils/firebase.js"
 import api from "../services/api.js"
 
-const AuthContext = createContext()
+export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
@@ -52,5 +52,3 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     )
 }
-
-export const useAuth = () => useContext(AuthContext)

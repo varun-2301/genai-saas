@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { User, LogOut } from "lucide-react"
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthConstants"
 
 
 export const Navbar = ({ hideUserDropdown }) => {
