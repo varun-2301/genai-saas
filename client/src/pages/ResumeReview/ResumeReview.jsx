@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react"
 import { FaFile } from "react-icons/fa"
 
 import { ResumeScore } from "./ResumeScore"
-import api from "../services/api"
+import api from "@/services/api"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"

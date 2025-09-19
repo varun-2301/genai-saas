@@ -5,6 +5,8 @@
 [![Backend - Render](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render)](https://render.com)  
 [![Billing - Stripe](https://img.shields.io/badge/Billing-Stripe-635BFF?style=for-the-badge&logo=stripe)](https://stripe.com)  
 [![AI - OpenAI](https://img.shields.io/badge/AI-OpenAI-412991?style=for-the-badge&logo=openai)](https://openai.com)  
+![CI/CD](https://github.com/varun-2301/genai-saas/actions/workflows/ci.yml/badge.svg)
+
 
 GenAI SaaS is a **MERN + Vite + Tailwind SaaS starter template** designed for building AI-powered applications with authentication, payments, and daily usage tracking.
 
@@ -138,7 +140,7 @@ Follow these steps to run the project locally with both backend and frontend.
 
 ## 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/genai-saas.git
+git clone https://github.com/varun-2301/genai-saas
 cd genai-saas
 ```
 
