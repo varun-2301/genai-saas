@@ -37,3 +37,5 @@
 .vscode/*
 
 /server/utils/serviceAccountKey.json
+
+/node_modules/*
