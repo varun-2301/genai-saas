@@ -1,0 +1,24 @@
+{
+  "name": "genai-saas",
+  "version": "1.0.0",
+  "description": "[![Made with MERN](https://img.shields.io/badge/Made%20with-MERN-4DB33D?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/mern-stack)  \r [![Frontend - Vercel](https://img.shields.io/badge/Frontend-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com)  \r [![Backend - Render](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render)](https://render.com)  \r [![Billing - Stripe](https://img.shields.io/badge/Billing-Stripe-635BFF?style=for-the-badge&logo=stripe)](https://stripe.com)  \r [![AI - OpenAI](https://img.shields.io/badge/AI-OpenAI-412991?style=for-the-badge&logo=openai)](https://openai.com)  \r ![CI/CD](https://github.com/varun-2301/genai-saas/actions/workflows/ci.yml/badge.svg)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/varun-2301/genai-saas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/varun-2301/genai-saas/issues"
+  },
+  "homepage": "https://github.com/varun-2301/genai-saas#readme",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
