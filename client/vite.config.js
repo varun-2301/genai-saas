@@ -16,6 +16,11 @@ export default defineConfig({
             '@': path.resolve(__dirname, './src'),
         },
     },
+    test: {
+        globals: true,
+        environment: "jsdom",
+        setupFiles: "./src/setupTests.js",
+    },
     server: {
         host: "0.0.0.0", // 👈 important
         port: 5173
