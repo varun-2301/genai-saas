@@ -1,0 +1,14 @@
+name: Server Tests
+
+on:
+  pull_request:
+    paths:
+      - 'server/**'
+      - '.github/workflows/server-tests.yml'
+
+jobs:
+  skip-server-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip server tests (no tests yet)
+        run: echo "No server tests yet. Skipping."
