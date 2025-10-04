@@ -1,11 +1,14 @@
 import React from "react"
-import { describe, it, vi, beforeEach } from "vitest"
-import { screen, fireEvent } from "@testing-library/react"
+import { describe, it, vi, beforeEach, expect } from "vitest"
+import { screen, fireEvent, act } from "@testing-library/react"
 import { Pricing } from "../../pages/Pricing"
 import { renderWithProviders } from "../utils/test-utils"
 
 vi.mock("../../services/api", () => ({
-    default: { post: vi.fn(() => Promise.resolve({ success: true, data: { id: "sess_123" } })), get: vi.fn(() => Promise.resolve({ success: true, data: { message: "ok" } })) }
+    default: { 
+        post: vi.fn(() => Promise.resolve({ success: true, data: { id: "sess_123" } })), 
+        get: vi.fn(() => Promise.resolve({ success: true, data: { message: "ok" } })) 
+    }
 }))
 
 vi.mock("@stripe/stripe-js", () => ({
@@ -26,10 +29,12 @@ describe("Pricing page", () => {
         expect(screen.getByText(/Pro Plan/i)).toBeInTheDocument()
     })
 
-    it("handles clicks on upgrade/downgrade", () => {
+    it("handles clicks on upgrade/downgrade", async () => {
         renderWithProviders(<Pricing />, { auth: { user: { plan: "FREE", isPro: false }, refreshUser: vi.fn() } })
         const upgrade = screen.getByRole("button", { name: /Upgrade to Pro/i })
-        fireEvent.click(upgrade)
+        await act(async () => {
+            fireEvent.click(upgrade)
+        })
     })
 })
 

@@ -1,5 +1,5 @@
 import React from "react"
-import { describe, it, vi, beforeEach } from "vitest"
+import { describe, it, vi, beforeEach, expect } from "vitest"
 import { screen, fireEvent } from "@testing-library/react"
 import { Login } from "../../pages/Login"
 import { renderWithProviders } from "../utils/test-utils"

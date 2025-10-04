@@ -1,5 +1,5 @@
 import React from "react"
-import { describe, it, vi } from "vitest"
+import { describe, it, vi, expect } from "vitest"
 import { screen, fireEvent } from "@testing-library/react"
 import { UsageAlert } from "../../../pages/Dashboard/UsageAlert"
 import { renderWithProviders } from "../../utils/test-utils"
