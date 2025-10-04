@@ -1,6 +1,6 @@
 import React from "react"
 import { describe, it, vi, beforeEach } from "vitest"
-import { screen, fireEvent } from "@testing-library/react"
+import { screen, fireEvent, act } from "@testing-library/react"
 import { ResumeReview } from "../../../pages/ResumeReview/ResumeReview"
 import { renderWithProviders } from "../../utils/test-utils"
 
@@ -23,7 +23,9 @@ describe("ResumeReview", () => {
         const textarea = screen.getByPlaceholderText(/paste your resume text/i)
         fireEvent.change(textarea, { target: { value: "Content" } })
         const button = screen.getByRole("button", { name: /get ai review/i })
-        fireEvent.click(button)
+        await act(async () => {
+            fireEvent.click(button)
+        })
     })
 })
 

@@ -1,11 +1,14 @@
 import React from "react"
 import { describe, it, vi, beforeEach } from "vitest"
-import { screen, fireEvent } from "@testing-library/react"
+import { screen, fireEvent, act } from "@testing-library/react"
 import { ImageGeneration } from "../../pages/ImageGeneration"
 import { renderWithProviders } from "../utils/test-utils"
 
 vi.mock("../../services/api", () => ({
-    default: { post: vi.fn(() => Promise.resolve({ success: true, data: { imageUrl: "http://example.com/img.png" } })) }
+    default: {
+        post: vi.fn(() => Promise.resolve({ success: true, data: { imageUrl: "http://example.com/img.png" } })),
+        get: vi.fn(() => Promise.resolve({ success: true, data: {} }))
+    }
 }))
 
 vi.mock("react-hot-toast", () => ({
@@ -21,7 +24,9 @@ describe("ImageGeneration", () => {
         const input = screen.getByPlaceholderText(/describe your image/i)
         fireEvent.change(input, { target: { value: "A cat" } })
         const button = screen.getByRole("button", { name: /generate/i })
-        fireEvent.click(button)
+        await act(async () => {
+            fireEvent.click(button)
+        })
     })
 })
 

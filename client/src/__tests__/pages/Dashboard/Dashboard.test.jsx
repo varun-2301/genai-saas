@@ -1,6 +1,6 @@
 import React from "react"
-import { describe, it, vi, beforeEach } from "vitest"
-import { screen } from "@testing-library/react"
+import { describe, it, vi, beforeEach, expect } from "vitest"
+import { screen, act } from "@testing-library/react"
 import { Dashboard } from "../../../pages/Dashboard"
 import { renderWithProviders } from "../../utils/test-utils"
 
@@ -15,8 +15,10 @@ vi.mock("../../../hooks/useUsage", () => ({
 describe("Dashboard page", () => {
     beforeEach(() => vi.clearAllMocks())
 
-    it("renders heading", () => {
-        renderWithProviders(<Dashboard />, { auth: { user: { name: "A" } } })
+    it("renders heading", async () => {
+        await act(async () => {
+            renderWithProviders(<Dashboard />, { auth: { user: { name: "A" } } })
+        })
         expect(screen.getByText(/Your Dashboard/i)).toBeInTheDocument()
     })
 })
