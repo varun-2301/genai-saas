@@ -42,7 +42,7 @@ export const docUpload = async(req, res, next) => {
             await fs.promises.unlink(req.file.path)
         }
 
-        next(err)
+        return next(err)
     }
 }
 
@@ -76,6 +76,6 @@ export const ask = async (req, res) => {
         return handleSuccessResponse(res, {answer :  response.content})
     } catch (err) {
         console.error(err)
-        next(err)
+        return next(err)
     }
 }

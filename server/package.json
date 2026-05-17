@@ -4,10 +4,12 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --watch index.js",
     "dev": "nodemon index.js",
     "lint": "eslint .",
-    "test": "echo \"No tests yet\" && exit 0"
+    "test": "cross-env NODE_ENV=test vitest",
+    "test:watch": "cross-env NODE_ENV=test vitest --watch",
+    "test:coverage": "cross-env NODE_ENV=test vitest --coverage"
   },
   "author": "",
   "license": "ISC",
@@ -28,6 +30,10 @@
     "stripe": "^18.4.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "@vitest/coverage-v8": "^3.2.4",
+    "cross-env": "^10.1.0",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.4",
+    "vitest": "^3.2.4"
   }
 }

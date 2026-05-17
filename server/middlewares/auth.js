@@ -1,20 +1,19 @@
 import admin from '../utils/firebase-admin.js'
+import { invalidRequest, notFound, unauthorizedRequest } from '../utils/responseHelper.js'
+import { asyncHandler } from './wrapper.js'
 
-export const verifyToken = async (req, res, next) => {
+export const verifyToken = asyncHandler(async (req, res, next) => {
     const authHeader = req.headers.authorization
-    if (!authHeader) return res.status(401).json({ error: 'No token' })
 
-    const token = authHeader.split(' ')[1]
-    try {
-        const decodedToken = await admin.auth().verifyIdToken(token)
-        req.user = decodedToken
+    if (!authHeader || !authHeader.startsWith("Bearer "))
+        throw notFound('No token') // throw instead of next()
 
-        // req.user = {
-        //     uid: 'test123',
-        //     email: 'test@example.com',
-        // }
-        next()
-    } catch {
-        return res.status(403).json({ error: 'Invalid token' })
-    }
-}
+    const token = authHeader.split(" ").slice(1).join(" ").trim()
+    if (!token)
+        throw invalidRequest('Empty token')
+
+    const decodedToken = await admin.auth().verifyIdToken(token)
+    req.user = decodedToken
+
+    next()
+})

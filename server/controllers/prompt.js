@@ -17,7 +17,7 @@ export const generatePrompt = async(req, res, next) => {
         return handleSuccessResponse(res, { result: output })
     } catch (err) {
         console.error("Error in /generate:", err)
-        next(err)
+        return next(err)
     }
 }
 
@@ -26,7 +26,7 @@ export const getPromptHistory = async(req, res) => {
         const prompts = await Prompt.find({ uid: req.user.uid }).sort({ createdAt: -1 })
         return handleSuccessResponse(res, prompts)
     } catch(err){
-        next(err)
+        return next(err)
     }
 }
 
@@ -47,6 +47,6 @@ export const savePrompt = async(uid, prompt, response, scorecard = '', type = 'p
         return true
     } catch (err) {
         console.error("Error in /generate:", err)
-        return false
+        return next(err)
     }
 }

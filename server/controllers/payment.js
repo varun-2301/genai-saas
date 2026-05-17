@@ -1,6 +1,6 @@
 import { stripe } from '../utils/stripe.js'
 import User from '../models/User.js'
-import { handleSuccessResponse } from '../utils/responseHelper.js'
+import { handleErrorResponse, handleSuccessResponse } from '../utils/responseHelper.js'
 import { PLANS } from '../utils/constants.js'
 
 export const createCheckoutSession = async (req, res, next) => {
@@ -28,7 +28,7 @@ export const createCheckoutSession = async (req, res, next) => {
         return handleSuccessResponse(res, { id: session.id })
     } catch (err) {
         console.error("Stripe checkout error:", err.message)
-        next(err);
+        return next(err)
     }
 }
 
@@ -44,7 +44,7 @@ export const paymentWebhook = async (req, res, next) => {
         )
     } catch (err) {
         console.error("⚠️ Webhook signature verification failed:", err.message)
-        next(err)
+        return handleErrorResponse(res, err)
     }
 
     // ✅ Handle different events
@@ -71,7 +71,7 @@ export const paymentWebhook = async (req, res, next) => {
             return handleSuccessResponse(res, {message : `✅ Payment successful for ${session.customer_email}`})
         } catch (err) {
             console.error("❌ Error updating user after payment:", err.message)
-            next(err)
+            return handleErrorResponse(res, err)
         }
     }
 

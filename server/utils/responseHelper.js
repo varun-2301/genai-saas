@@ -10,6 +10,12 @@ export const unauthorizedRequest = (message) => {
     return err;
 }
 
+export const invalidRequest = (message) => {
+    const err = new Error(message);
+    err.status = 403;
+    return err;
+}
+
 export const notFound = (message) => {
     const err = new Error(message);
     err.status = 404;
@@ -41,7 +47,9 @@ export const tokenError = (message) => {
 }
 
 export const handleErrorResponse = (res, error) => {
-    const status = error.status || 500;
+    console.log("ERROR RESPONSE HELPER HIT", res)
+    console.log("ERROR RESPONSE HELPER HIT", error.status, error.message)
+    const status = error.status > 0 ? error.status : 500;
     const message = error.message || 'Internal Server Error';
     res.status(status).json({
         success : false,

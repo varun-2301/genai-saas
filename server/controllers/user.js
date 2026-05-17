@@ -7,7 +7,7 @@ export const saveUser = async (req, res, next) => {
     try {
         const { idToken, user } = req.body
         if (!idToken) 
-            throw notFound('Token not found')
+            return next(notFound("Token not found"))
         
         const decodedToken = await admin.auth().verifyIdToken(idToken)
         const { uid, email } = decodedToken
@@ -25,20 +25,23 @@ export const saveUser = async (req, res, next) => {
         return handleSuccessResponse(res, userRes)
     } catch (error) {
         console.error("Error verifying Firebase ID token:", error)
-        next(error)
+        return next(error)
     }
 }
 
 export const getUser = async (req, res, next) => {
     try {
         if (!req.user || !req.user.uid)
-            throw unauthorizedRequest('Unauthorized')
+            return next(unauthorizedRequest("Unauthorized"))
 
         const user = await User.findOne({ uid: req.user.uid })
+        if(!user)
+            return next(notFound("User not found"))
+            
         return handleSuccessResponse(res, {user})
 
     } catch (error) {
-        next(error)
+        return next(error)
     }
 }
 
@@ -76,7 +79,7 @@ export const getUsage = async (req, res, next) => {
 
         return handleSuccessResponse(res, responseData)
     } catch (err) {
-        next(err)
+        return next(err)
     }
 }
 
@@ -99,7 +102,7 @@ export const incrementUserAIUsage = async(uid, type) => {
         return false
     } catch (err) {
         console.error("Error in user usage increment:", err)
-        return false
+        return next(err)
     }
 }
 
@@ -121,6 +124,6 @@ export const downgradeUserPlan = async(req, res, next) => {
 
         return handleSuccessResponse(res, {message : "User Plan Downgraded Successfully"})
     } catch (error) {
-        next(error)
+        return next(error)
     }
 }

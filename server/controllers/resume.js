@@ -65,7 +65,7 @@ export const resume = async(req, res, next) => {
         const { resumeText, jobDescription } = req.body
 
         if (!resumeText) {
-            throw notFound('Resume text is required');
+            return next(notFound('Resume text is required'))
         }
 
         // Step 1: Call review logic
@@ -83,6 +83,6 @@ export const resume = async(req, res, next) => {
         
     } catch (err) {
         console.error("Error in /review:", err)
-        next(err)
+        return next(err)
     }
 }

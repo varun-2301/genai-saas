@@ -33,6 +33,7 @@
 /server/*.njsproj
 /server/*.sln
 /server/*.sw?
+/server/coverage/*
 
 .vscode/*
 
